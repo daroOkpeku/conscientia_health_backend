@@ -20,11 +20,11 @@ return new class extends Migration
             $table->string('otp')->nullable();
             $table->enum('otp_status', ['active', 'used', 'nothing']);
             $table->boolean('confirm_status')->default(false);
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->enum('user_type', ['user', 'admin', 'customer_care']);
             $table->string('captcha');
             $table->string('is_accepted')->nullable();
-            $table->string('api_token');
+            $table->string('api_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

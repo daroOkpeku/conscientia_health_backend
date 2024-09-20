@@ -14,6 +14,12 @@ return [
     |
     */
 
+    'drchrono' => [
+    'client_id' => env('DRCHRONO_CLIENT_ID'),
+    'client_secret' => env('DRCHRONO_CLIENT_SECRET'),
+    'redirect' => env('DRCHRONO_REDIRECT_URI'),
+     ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

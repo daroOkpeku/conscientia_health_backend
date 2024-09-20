@@ -182,6 +182,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
       //  Mews\Captcha\CaptchaServiceProvider::class,
+        App\Providers\Socialite\DrChrono\DrChronoServiceProvider::class,
         /*
          * Package Service Providers...
          */

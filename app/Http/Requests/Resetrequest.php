@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ValidateToken;
 use Illuminate\Validation\Rules\Password;
-class RegisterRequest extends FormRequest
+class Resetrequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +22,9 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-          'firstname'=>'required|string',
-          'lastname'=>'required|string',
-          'email' =>"required|email|unique:users",
-        //   'user_type' => 'required|string',
-          'captcha.captcha' => 'captcha',
-          'is_accepted'=>"required|accepted",
-         // 'token' => ["required", new ValidateToken],
-         'password' => ['required', 'string', Password::min(8)->letters()->numbers()->symbols()],
-
+            'email'=>"required|email",
+            'code'=>"string",
+             'password'=>['required', 'confirmed', 'string', Password::min(8)->letters()->numbers()->symbols()],
         ];
     }
 }

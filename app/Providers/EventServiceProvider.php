@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\BookingAdminEvent;
+use App\Events\BookingEvent;
+use App\Events\ForgotPasswordEvent;
 use App\Events\RegisterEvent;
 use App\Events\Sentotpevent;
+use App\Listeners\BookingAdminListener;
+use App\Listeners\BookingListener;
+use App\Listeners\ForgotPasswordListener;
 use App\Listeners\RegisterListener;
 use App\Listeners\SentotpListener;
 use Illuminate\Auth\Events\Registered;
@@ -28,6 +34,16 @@ class EventServiceProvider extends ServiceProvider
         ],
         Sentotpevent::class =>[
            SentotpListener::class
+        ],
+        ForgotPasswordEvent::class =>[
+            ForgotPasswordListener::class
+        ],
+
+        BookingEvent::class =>[
+            BookingListener::class
+        ],
+        BookingAdminEvent::class =>[
+            BookingAdminListener::class
         ]
     ];
 
