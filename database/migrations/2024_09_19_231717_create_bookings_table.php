@@ -25,6 +25,10 @@ return new class extends Migration
             //    "is_used"
             $table->string("code")->nullable();
             $table->enum("is_used", ["nothing", 'active', 'used']);
+            $table->string('country')->nullable();
+            $table->string('legal_sex')->nullable();
+            $table->string('dob')->nullable();
+            $table->string('schedule_time')->nullable();
             $table->timestamps();
         });
     }

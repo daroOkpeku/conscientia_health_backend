@@ -33,7 +33,7 @@ Route::get("/auth/callback/drchrono", "drchrono");
 Route::get("/auth/redirect/drchrono", "redirectdrchrono");
 Route::get("/getAccessToken", "getAccessToken");
 });
-
+// https://app.drchrono.com/api/appointments
 
 Route::controller(AuthController::class)->group(function(){
     Route::post('/register', 'register');

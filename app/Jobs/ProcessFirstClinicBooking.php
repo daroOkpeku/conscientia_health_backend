@@ -25,6 +25,10 @@ class ProcessFirstClinicBooking implements ShouldQueue
     public $visit_type;
     public $generatecode;
     public $captcha;
+    public  $country;
+    public  $legal_sex;
+    public $dob;
+    public $schedule_time;
 
     /**
      * Create a new job instance.
@@ -40,6 +44,10 @@ class ProcessFirstClinicBooking implements ShouldQueue
         $visit_type,
         $generatecode,
         $captcha,
+        $country,
+        $legal_sex,
+        $dob,
+        $schedule_time
     )
     {
         $this->firstname = $firstname;
@@ -52,6 +60,10 @@ class ProcessFirstClinicBooking implements ShouldQueue
         $this->visit_type = $visit_type;
         $this->generatecode = $generatecode;
         $this->captcha = $captcha;
+        $this->country = $country;
+        $this->legal_sex = $legal_sex;
+        $this->dob = $dob;
+        $this->schedule_time = $schedule_time;
     }
 
     /**
@@ -71,6 +83,10 @@ class ProcessFirstClinicBooking implements ShouldQueue
                   "visit_type"=>$this->visit_type,
                   "code"=>$this->generatecode,
                   "is_used"=>"active",
+                  "country"=>$this->country,
+                  "legal_sex"=>$this->legal_sex,
+                  "dob"=>$this->dob,
+                  "schedule_time"=>$this->schedule_time
               ]);
               User::create([
                   'firstname'=>$this->firstname,

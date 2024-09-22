@@ -21,6 +21,12 @@ class Booking extends Model
         'comment',
         "visit_type",
         "code",
-        "is_used"
+        "is_used",
+        "country",
+        "legal_sex",
+        "dob",
+        "schedule_time"
     ];
+
+
 }

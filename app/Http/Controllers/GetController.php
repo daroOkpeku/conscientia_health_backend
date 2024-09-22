@@ -42,7 +42,8 @@ class GetController extends Controller
     public function redirectdrchrono(){
         $redirectUri = env('DRCHRONO_REDIRECT_URI');
         $clientId = env('DRCHRONO_CLIENT_ID');
-        $scopes = 'patients:summary:read patients:summary:write calendar:read calendar:write clinical:read clinical:write'; // Example: 'clinical:read patients:read'
+        // 'patients:summary:read patients:summary:write calendar:read calendar:write clinical:read clinical:write'
+        $scopes ='patients:summary:read patients:summary:write calendar:read calendar:write clinical:read clinical:write'; // Example: 'clinical:read patients:read'
 
         // used this api to get code to generate access_token and refresh_token
         $redirectUriEncoded = urlencode($redirectUri);
