@@ -55,7 +55,7 @@ class GetController extends Controller
 
 
         try {
-     
+
             return response()->json([
                 'body' => $authorizationUrl
             ],200);
@@ -93,7 +93,7 @@ class GetController extends Controller
 
 
     public function getAccessToken(Request $request){
-   
+
         if (isset($getParams['error'])) {
             throw new Exception('Error authorizing application: ' . $getParams['error']);
         }
@@ -105,46 +105,46 @@ class GetController extends Controller
         $postData = [
             'code' =>$checktoken->code,
             'grant_type' => 'authorization_code',
-            'redirect_uri' =>$redirectUri, 
+            'redirect_uri' =>$redirectUri,
             'client_id' =>$clientId,
             'client_secret' =>$sercet,
         ];
         // Initialize cURL
         $ch = curl_init();
-        
+
         // Set cURL options
         curl_setopt($ch, CURLOPT_URL, 'https://drchrono.com/o/token/');
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        
+
         // Execute cURL request
         $response = curl_exec($ch);
-        
+
         // Check for cURL errors
         if (curl_errno($ch)) {
             throw new Exception('Request Error: ' . curl_error($ch));
         }
-        
+
         // Get the HTTP status code of the response
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
+
         // Close cURL resource
         curl_close($ch);
-        
+
         // Check for non-200 status code
         if ($httpCode !== 200) {
             throw new Exception('Failed to retrieve access token. HTTP Status Code: ' . $httpCode );
         }
-        
+
         // Decode the JSON response
         $data = json_decode($response, true);
-        
+
         // Check for JSON decoding errors
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception('JSON decoding error: ' . json_last_error_msg());
         }
-        
+
         // Save these in your database associated with the user
         $accessToken = $data['access_token'];
         $refreshToken = $data['refresh_token'];
@@ -155,14 +155,14 @@ class GetController extends Controller
                 'refresh_token'=>$refreshToken,
                 'expires_timestamp'=>$expiresTimestamp->format('Y-m-d H:i:s') . " UTC",
             ]);
-            
+
             // Output or save the tokens and expiry information as needed
              return response()->json(["success"=>'successful']);
         }
-      
-        
-        
- 
+
+
+
+
 }
 
 
