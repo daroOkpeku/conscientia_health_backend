@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DrChronoWebhookController;
 use App\Http\Controllers\GetController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,7 @@ Route::get('/decryptToken/{token}', 'decryptToken');
 Route::get("/auth/callback/drchrono", "drchrono");
 Route::get("/auth/redirect/drchrono", "redirectdrchrono");
 Route::get("/getAccessToken", "getAccessToken");
+Route::get("/list_doctors", "list_doctors");
 });
 // https://app.drchrono.com/api/appointments
 
@@ -51,4 +53,11 @@ Route::controller(AuthController::class)->group(function(){
 
 Route::controller(DrChronoWebhookController::class)->group(function(){
     Route::post('/webhook/drchrono', 'webhook');
+});
+
+
+
+
+Route::controller(PostController::class)->group(function(){
+    Route::post("/contact", "contact");
 });

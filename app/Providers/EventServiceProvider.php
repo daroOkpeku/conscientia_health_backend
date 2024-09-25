@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Events\BookingAdminEvent;
 use App\Events\BookingEvent;
+use App\Events\Contactevent;
 use App\Events\ForgotPasswordEvent;
 use App\Events\RegisterEvent;
 use App\Events\Sentotpevent;
 use App\Listeners\BookingAdminListener;
 use App\Listeners\BookingListener;
+use App\Listeners\Contactlistener;
 use App\Listeners\ForgotPasswordListener;
 use App\Listeners\RegisterListener;
 use App\Listeners\SentotpListener;
@@ -44,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         BookingAdminEvent::class =>[
             BookingAdminListener::class
+        ],
+        Contactevent::class=>[
+            Contactlistener::class
         ]
     ];
 

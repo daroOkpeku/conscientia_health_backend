@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AppToken;
+use App\Models\Doctors;
 use App\Models\User;
 use DateTime;
 use DateTimeZone;
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Crypt;
 use Laravel\Socialite\Facades\Socialite;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Redirect;
+use GuzzleHttp\Psr7\Request as Req;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 class GetController extends Controller
 {
     public function gencaptcha(){
@@ -43,7 +48,7 @@ class GetController extends Controller
         $redirectUri = env('DRCHRONO_REDIRECT_URI');
         $clientId = env('DRCHRONO_CLIENT_ID');
         // 'patients:summary:read patients:summary:write calendar:read calendar:write clinical:read clinical:write'
-        $scopes ='patients:summary:read patients:summary:write calendar:read calendar:write clinical:read clinical:write'; // Example: 'clinical:read patients:read'
+        $scopes ='labs:read labs:write messages:read messages:write patients:read patients:write patients:summary:read patients:summary:write settings:read settings:write tasks:read tasks:write user:read user:write billing:patient-payment:read billing:patient-payment:write billing:read billing:write calendar:read calendar:write clinical:read clinical:write'; // Example: 'clinical:read patients:read'
 
         // used this api to get code to generate access_token and refresh_token
         $redirectUriEncoded = urlencode($redirectUri);
@@ -163,6 +168,50 @@ class GetController extends Controller
 
 
 
+}
+
+
+public function showtest(Request $request){
+
+
+
+
+}
+
+public function list_doctors(Request $request){
+  $doctors = Doctors::whereNotNull('job_title')
+  ->where('is_account_suspended', 0)->where('first_name', '!=', 'Simbiat')
+  ->inRandomOrder()
+  ->take(3)
+  ->get();
+  $date = Carbon::now()->format('Y-m-d');
+$client = new Client();
+$headers = [
+  'Content-Type' => 'application/json',
+  'Accept' => 'application/json',
+  'Authorization' => 'Bearer RCuBUatfnxaMsDpy4X6oSSWjH5NwwU',
+];
+
+
+$kod = array();
+foreach ($doctors as  $doctor) {
+
+    $request = new Req('GET', "https://app.drchrono.com/api/appointments?date={$date}&doctor=322461", $headers);
+    $res = $client->sendAsync($request)->wait();
+    $body = $res->getBody()->getContents();
+    $data = json_decode($body, true);
+
+ $jojo = [
+    "doctor"=>$doctor->first_name." ".$doctor->last_name,
+    "specialty"=>$doctor->specialty,
+    "picture"=>$doctor->profile_picture,
+    "day"=>$data['results'][0]['recurring_days']
+ ];  
+
+ array_push($kod, $jojo);
+}
+
+  return response()->json(['success'=>$kod]); 
 }
 
 

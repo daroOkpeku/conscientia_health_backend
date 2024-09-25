@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\Contactevent;
 use App\Models\Contact;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -42,7 +43,19 @@ class ProcessContact implements ShouldQueue
     public function handle(): void
     {
         Contact::create([
-
+            'name'=>$this->name,
+            'email'=>$this->email,
+            'phone'=>$this->phone,
+            'subject'=>$this->subject,
+            'comment'=>$this->comment
         ]);
+        Contactevent::dispatch(
+        "info@conscientiahealth.com",
+        $this->name,
+        $this->email,
+        $this->phone,
+        $this->subject,
+        $this->comment
+    );
     }
 }
