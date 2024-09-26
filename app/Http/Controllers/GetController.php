@@ -250,7 +250,7 @@ public function state_age_check(Request $request){
 
     }
     else{
-      return response()->json(['error'=>'we dont have any providers in the state you seleted please call us on +8778035342 or email us on info@conscientiahealth.com'],200);
+      return response()->json(['error'=>"We don't have any providers in the state you selected. Please call us at +877-803-5342 or email us at info@conscientiahealth.com."],200);
     }
 
 }
