@@ -23,12 +23,18 @@ class BookingAdminEvent
     public $visit_type;
     public  $code;
     public  $is_used;
+    public $schedule_time;
+    public $mean_payment;
+    public $country;
     /**
      * Create a new event instance.
      */
     public function __construct(
         $firstname, $lastname, $state, $doctor, $email, $phone,
-        $comment, $visit_type,  $code,  $is_used
+        $comment, $visit_type,  $code,  $is_used,
+        $schedule_time,
+        $mean_payment,
+        $country
     )
     {
         $this->firstname = $firstname;
@@ -41,6 +47,9 @@ class BookingAdminEvent
         $this->code = $code;
         $this->is_used = $is_used;
         $this->comment =$comment;
+        $this->schedule_time = $schedule_time;
+        $this->mean_payment = $mean_payment;
+        $this->country = $country;
     }
 
     /**

@@ -186,7 +186,8 @@ class AuthRepository implements AuthRepositoryInterface
             $request->country,
             $request->legal_sex,
             $request->dob,
-            $request->schedule_time
+            $request->schedule_time,
+            $request->mean_payment
            );
 
            return response()->json(['success'=>"Please check you eamil"], 200);
@@ -206,7 +207,8 @@ class AuthRepository implements AuthRepositoryInterface
                     $request->country,
                     $request->legal_sex,
                     $request->dob,
-                    $request->schedule_time
+                    $request->schedule_time,
+                    $request->mean_payment
                   );
 
                   return response()->json(['success'=>'thank you for booking an Online appointment we will get back to you soon'],200);
@@ -232,7 +234,8 @@ class AuthRepository implements AuthRepositoryInterface
                 $request->country,
                 $request->legal_sex,
                 $request->dob,
-                $request->schedule_time
+                $request->schedule_time,
+                $request->mean_payment
               );
               return response()->json(['success'=>"Please check you eamil"], 200);
         }else{
@@ -251,7 +254,8 @@ class AuthRepository implements AuthRepositoryInterface
                 $request->country,
                 $request->legal_sex,
                 $request->dob,
-                $request->schedule_time
+                $request->schedule_time,
+                $request->mean_payment
               );
               return response()->json(['success'=>'thank you for booking a Clinical appointment we will get back to you soon'],200);
 

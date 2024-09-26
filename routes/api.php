@@ -34,6 +34,8 @@ Route::get("/auth/callback/drchrono", "drchrono");
 Route::get("/auth/redirect/drchrono", "redirectdrchrono");
 Route::get("/getAccessToken", "getAccessToken");
 Route::get("/list_doctors", "list_doctors");
+Route::get("/doctor_availiable", "doctor_availiable");
+Route::get("/state_age_check", "state_age_check");
 });
 // https://app.drchrono.com/api/appointments
 

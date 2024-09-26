@@ -31,7 +31,12 @@ return new class extends Migration
             $table->string('practice_group')->nullable();
             $table->string('practice_group_name')->nullable();
             $table->longText('profile_picture')->nullable();
-            $table->boolean('is_account_suspended')->default(false);
+            $table->boolean('is_account_suspended')->default(False);
+            $table->string('states')->nullable();
+            $table->bigInteger('age_start')->nullable();
+            $table->bigInteger('age_end')->nullable();
+            $table->boolean('is_therapist')->default(False);
+            $table->boolean('is_new_patient')->default(False);
             $table->timestamps();
         });
     }

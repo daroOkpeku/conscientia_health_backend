@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\BookingEvent;
+use App\Events\BookingAdminEvent;
 use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -29,6 +30,7 @@ class ProcessFirstBooking implements ShouldQueue
     public  $legal_sex;
     public $dob;
     public $schedule_time;
+    public $mean_payment;
     /**
      * Create a new job instance.
      */
@@ -46,7 +48,8 @@ class ProcessFirstBooking implements ShouldQueue
         $country,
         $legal_sex,
         $dob,
-        $schedule_time
+        $schedule_time,
+        $mean_payment
     )
     {
      
@@ -64,6 +67,7 @@ class ProcessFirstBooking implements ShouldQueue
         $this->legal_sex = $legal_sex;
         $this->dob = $dob;
         $this->schedule_time = $schedule_time;
+        $this->mean_payment = $mean_payment;
     }
 
     /**
@@ -87,7 +91,8 @@ class ProcessFirstBooking implements ShouldQueue
                 "country"=>$this->country,
                 "legal_sex"=>$this->legal_sex,
                 "dob"=>$this->dob,
-                "schedule_time"=>$this->schedule_time
+                "schedule_time"=>$this->schedule_time,
+                'mean_payment'=>$this->mean_payment
             ]);
             User::create([
                 'firstname'=>$this->firstname,
@@ -99,6 +104,9 @@ class ProcessFirstBooking implements ShouldQueue
                 'confirm_status'=>1
             ]);
                 event( new BookingEvent( $booking->email, $booking->code) );
+
+                event( new BookingAdminEvent($this->firstname, $this->lastname, $this->state, $this->doctor, $this->email, $this->phone,
+                $this->comment, $this->visit_type,  $booking->code,  $booking->is_used,   $this->schedule_time, $this->mean_payment, $this->country));
             
         });
         

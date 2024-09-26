@@ -33,7 +33,11 @@ class BookingAdminListener
              "email"=>$event->email,
              "phone"=>$event->phone,
              "visit_type"=>$event->visit_type,
-             'comment'=>$event->comment
+             'comment'=>$event->comment,
+            //  $this->schedule_time, $this->mean_payment
+            "schedule_time"=>$event->schedule_time,
+            "mean_payment"=>$event->mean_payment,
+            "country"=>$event->country
         ];
 
         Mail::to($event->email)->send(new BookingAdminMail($data));

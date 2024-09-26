@@ -29,6 +29,7 @@ class ProcessFirstClinicBooking implements ShouldQueue
     public  $legal_sex;
     public $dob;
     public $schedule_time;
+    public $mean_payment;
 
     /**
      * Create a new job instance.
@@ -47,7 +48,8 @@ class ProcessFirstClinicBooking implements ShouldQueue
         $country,
         $legal_sex,
         $dob,
-        $schedule_time
+        $schedule_time,
+        $mean_payment
     )
     {
         $this->firstname = $firstname;
@@ -64,6 +66,7 @@ class ProcessFirstClinicBooking implements ShouldQueue
         $this->legal_sex = $legal_sex;
         $this->dob = $dob;
         $this->schedule_time = $schedule_time;
+        $this->mean_payment = $mean_payment;
     }
 
     /**
@@ -86,7 +89,8 @@ class ProcessFirstClinicBooking implements ShouldQueue
                   "country"=>$this->country,
                   "legal_sex"=>$this->legal_sex,
                   "dob"=>$this->dob,
-                  "schedule_time"=>$this->schedule_time
+                  "schedule_time"=>$this->schedule_time,
+                  "mean_payment"=>$this->mean_payment
               ]);
               User::create([
                   'firstname'=>$this->firstname,
@@ -99,7 +103,7 @@ class ProcessFirstClinicBooking implements ShouldQueue
               ]);
                   event( new BookingEvent( $booking->email, $booking->code) );
               event( new BookingAdminEvent($this->firstname, $this->lastname, $this->state, $this->doctor, $this->email, $this->phone,
-                  $this->comment, $this->visit_type,  $booking->code,  $booking->is_used));
+                  $this->comment, $this->visit_type,  $booking->code,  $booking->is_used,   $this->schedule_time, $this->mean_payment, $this->country));
 
           });
     }

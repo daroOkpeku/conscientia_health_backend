@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('legal_sex')->nullable();
             $table->string('dob')->nullable();
             $table->string('schedule_time')->nullable();
+            $table->string('mean_payment')->nullable();
             $table->timestamps();
         });
     }

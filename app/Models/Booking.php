@@ -25,7 +25,8 @@ class Booking extends Model
         "country",
         "legal_sex",
         "dob",
-        "schedule_time"
+        "schedule_time",
+        "mean_payment"
     ];
 
 

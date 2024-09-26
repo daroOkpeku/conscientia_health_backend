@@ -196,7 +196,7 @@ $headers = [
 $kod = array();
 foreach ($doctors as  $doctor) {
 
-    $request = new Req('GET', "https://app.drchrono.com/api/appointments?date={$date}&doctor=322461", $headers);
+    $request = new Req('GET', "https://app.drchrono.com/api/appointments?date={$date}&doctor={$doctor->drchrono_id}", $headers);
     $res = $client->sendAsync($request)->wait();
     $body = $res->getBody()->getContents();
     $data = json_decode($body, true);
@@ -206,14 +206,54 @@ foreach ($doctors as  $doctor) {
     "specialty"=>$doctor->specialty,
     "picture"=>$doctor->profile_picture,
     "day"=>$data['results'][0]['recurring_days']
- ];  
+ ];
 
  array_push($kod, $jojo);
 }
 
-  return response()->json(['success'=>$kod]); 
+  return response()->json(['success'=>$kod]);
 }
 
 
+public function doctor_availiable(){
+//     $doctors = Doctors::whereNotNull('job_title')
+//     ->where('is_account_suspended', 0)->where('first_name', '!=', 'Simbiat')
+//     ->inRandomOrder()
+//     ->take(3)
+//     ->get();
+
+// $client = new Client();
+// $headers = [
+//   'Content-Type' => 'application/json',
+//   'Accept' => 'application/json',
+//   'Authorization' => 'Bearer RCuBUatfnxaMsDpy4X6oSSWjH5NwwU',
+// ];
+// $status='available';
+// $request = new Req('GET', "https://app.drchrono.com/api/appointments?doctor=322461&status={$status}", $headers);
+// $res = $client->sendAsync($request)->wait();
+// $body = $res->getBody()->getContents();
+// $data = json_decode($body, true);
+// return response()->json($data);
+}
+
+public function state_age_check(Request $request){
+    // $state = 'NJ';
+    $doctors = Doctors::whereNotNull('job_title')
+    ->where(['is_account_suspended'=>0, 'is_new_patient'=>1])
+    ->where('age_start', '<=', $request->get('age'))
+    ->where('age_end', '>=', $request->get('age'))
+    ->whereJsonContains('states', $request->get('state'))
+    ->get();
+
+    if($doctors){
+        return response()->json(["success"=>$doctors], 200);
+
+    }
+    else{
+      return response()->json(['error'=>'we dont have any providers in the state you seleted please call us on +8778035342 or email us on info@conscientiahealth.com'],200);
+    }
+
+}
+// ["FL","TX","NJ"]
 
 }

@@ -11,11 +11,15 @@
     <div>
   <p>firstname: {{ $data['firstname'] }}</p>
   <p>lastname: {{ $data['lastname'] }}</p>
+  <p>country: {{ $data['country'] }}</p>
   <p>state: {{ $data['state'] }}</p>
   <p>doctor: {{ $data['doctor'] }}</p>
   <p>email: {{ $data['email'] }}</p>
   <p>phone: {{ $data['phone'] }}</p>
   <p>visit type: {{ $data['visit_type'] }}</p>
+  <p>schedule time: {{ $data['schedule_time']  }} </p>
+  <p>mean payment: {{ $data['mean_payment']  }} </p>
+
   <p> {{ $data['comment'] }} </p>
     </div>
 </body>

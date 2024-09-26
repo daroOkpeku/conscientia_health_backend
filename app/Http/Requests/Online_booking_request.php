@@ -30,7 +30,8 @@ class Online_booking_request extends FormRequest
             'phone' => 'required|string|regex:/^[0-9+ ]+$/',
             'comment' => "required|string",  // Corrected from 'sting' to 'string'
             "captcha.captcha" => "captcha",
-            "visit_type" => "required|string"
+            "visit_type" => "required|string",
+            'mean_payment'=>"required|string"
         ];
         
     }

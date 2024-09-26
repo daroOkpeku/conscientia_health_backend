@@ -28,6 +28,12 @@ class Doctors extends Model
         'practice_group',
         'practice_group_name',
         'profile_picture',
-        'is_account_suspended'
+        'is_account_suspended',
+        'states',
+        'age_start',
+        'age_end',
+        'is_therapist',
+        'is_new_patient',
     ];
+
 }

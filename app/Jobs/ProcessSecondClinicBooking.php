@@ -26,6 +26,7 @@ class ProcessSecondClinicBooking implements ShouldQueue
     public  $legal_sex;
     public $dob;
     public $schedule_time;
+    public $mean_payment;
     /**
      * Create a new job instance.
      */
@@ -43,7 +44,8 @@ class ProcessSecondClinicBooking implements ShouldQueue
         $country,
         $legal_sex,
         $dob,
-        $schedule_time
+        $schedule_time,
+        $mean_payment
     )
     {
         $this->firstname = $firstname;
@@ -60,6 +62,7 @@ class ProcessSecondClinicBooking implements ShouldQueue
         $this->legal_sex = $legal_sex;
         $this->dob = $dob;
         $this->schedule_time = $schedule_time;
+        $this->mean_payment = $mean_payment; 
     }
 
     /**
@@ -84,11 +87,12 @@ class ProcessSecondClinicBooking implements ShouldQueue
                 "country"=>$this->country,
                 "legal_sex"=>$this->legal_sex,
                 "dob"=>$this->dob,
-                "schedule_time"=>$this->schedule_time
+                "schedule_time"=>$this->schedule_time,
+                "mean_payment"=>$this->mean_payment,
             ]);
 
              BookingAdminEvent::dispatch($this->firstname, $this->lastname, $this->state, $this->doctor, $this->email, $this->phone,
-            $this->comment, $this->visit_type,  $booking->code,  $booking->is_used);
+            $this->comment, $this->visit_type,  $booking->code,  $booking->is_used,  $booking->schedule_time, $booking->mean_payment, $this->country);
         }else{
             $booking =  Booking::create([
                 'firstname'=>$this->firstname,
@@ -104,11 +108,12 @@ class ProcessSecondClinicBooking implements ShouldQueue
                 "country"=>$this->country,
                 "legal_sex"=>$this->legal_sex,
                 "dob"=>$this->dob,
-                "schedule_time"=>$this->schedule_time
+                "schedule_time"=>$this->schedule_time,
+                "mean_payment"=>$this->mean_payment
             ]);
 
              BookingAdminEvent::dispatch($this->firstname, $this->lastname, $this->state, $this->doctor, $this->email, $this->phone,
-            $this->comment, $this->visit_type,  $booking->code,  $booking->is_used);
+            $this->comment, $this->visit_type,  $booking->code,  $booking->is_used,  $booking->schedule_time, $booking->mean_payment, $this->country);
         }
     }
 }
