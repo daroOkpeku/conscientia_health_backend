@@ -184,12 +184,13 @@ public function list_doctors(Request $request){
   ->inRandomOrder()
   ->take(3)
   ->get();
+  $checktoken = AppToken::whereNotNull("code")->where("code", "!=", "")->first();
   $date = Carbon::now()->format('Y-m-d');
 $client = new Client();
 $headers = [
   'Content-Type' => 'application/json',
   'Accept' => 'application/json',
-  'Authorization' => 'Bearer RCuBUatfnxaMsDpy4X6oSSWjH5NwwU',
+  'Authorization' => "Bearer {$checktoken->access_token}",
 ];
 
 
