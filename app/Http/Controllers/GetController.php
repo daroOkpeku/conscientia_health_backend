@@ -180,7 +180,7 @@ public function showtest(Request $request){
 
 public function list_doctors(Request $request){
   $doctors = Doctors::whereNotNull('job_title')
-  ->where('is_account_suspended', 0)->where('first_name', '!=', 'Simbiat')
+  ->where(['is_account_suspended'=> 0, 'is_new_patient'=>1])->where('first_name', '!=', 'Simbiat')
   ->inRandomOrder()
   ->take(3)
   ->get();
@@ -200,12 +200,14 @@ foreach ($doctors as  $doctor) {
     $res = $client->sendAsync($request)->wait();
     $body = $res->getBody()->getContents();
     $data = json_decode($body, true);
-
+    $date = Carbon::parse($data['results'][0]["scheduled_time"]);
+    $formattedDate = $date->format('m-d-y H:i:s');
  $jojo = [
     "doctor"=>$doctor->first_name." ".$doctor->last_name,
     "specialty"=>$doctor->specialty,
     "picture"=>$doctor->profile_picture,
-    "day"=>$data['results'][0]['recurring_days']
+    "day"=>$data['results'][0]['recurring_days'],
+    "time"=>$formattedDate
  ];
 
  array_push($kod, $jojo);
