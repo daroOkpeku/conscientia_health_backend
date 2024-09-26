@@ -16,6 +16,6 @@ class PostController extends Controller
 
 
     public function contact(ContactRequest $request){
-     $this->postmethod->contact($request);
+      return  $this->postmethod->contact($request);
     }
 }

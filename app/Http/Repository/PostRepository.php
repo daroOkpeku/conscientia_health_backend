@@ -16,6 +16,7 @@ ProcessContact::dispatchSync(
    $request->subject,
    $request->comment
 );
+return response()->json(['success'=>"we will get back to you soon"], 200);
 }
 
 }

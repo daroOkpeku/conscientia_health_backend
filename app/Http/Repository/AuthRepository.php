@@ -190,7 +190,7 @@ class AuthRepository implements AuthRepositoryInterface
             $request->mean_payment
            );
 
-           return response()->json(['success'=>"Please check you eamil"], 200);
+           return response()->json(['success'=>"Please check your email"], 200);
          }else{
             $generatecode = sha1(time());
                   ProcessSecondBooking::dispatch(
