@@ -185,15 +185,16 @@ public function list_doctors(Request $request){
   ->take(3)
   ->get();
   $checktoken = AppToken::whereNotNull("code")->where("code", "!=", "")->first();
-  $date = Carbon::now()->format('Y-m-d');
+
+if($checktoken){
+
+$date = Carbon::now()->format('Y-m-d');
 $client = new Client();
 $headers = [
   'Content-Type' => 'application/json',
   'Accept' => 'application/json',
   'Authorization' => "Bearer {$checktoken->access_token}",
 ];
-
-
 $kod = array();
 foreach ($doctors as  $doctor) {
 
@@ -213,8 +214,9 @@ foreach ($doctors as  $doctor) {
 
  array_push($kod, $jojo);
 }
+return response()->json(['success'=>$kod]);
+}
 
-  return response()->json(['success'=>$kod]);
 }
 
 
