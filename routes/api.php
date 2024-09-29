@@ -62,4 +62,17 @@ Route::controller(DrChronoWebhookController::class)->group(function(){
 
 Route::controller(PostController::class)->group(function(){
     Route::post("/contact", "contact");
+
+});
+
+// profiles
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::controller(PostController::class)->group(function(){
+        Route::post("/profile_create", "profile_create");
+        Route::post("/uploadprofileimage", "uploadprofileimage");
+    });
+
 });

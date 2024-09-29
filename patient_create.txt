@@ -1,0 +1,51 @@
+emergency_contact_phone
+emergency_contact_relation,
+emergency_contact_name
+
+responsible_party_phone
+responsible_party_email
+responsible_party_relation
+responsible_party_name
+
+zip_code
+city
+date_of_birth
+middle_name
+home_phone
+office_phone
+patient_photo
+state
+address
+chart_id
+first_name
+email
+last_name
+nick_name
+created_at
+social_security_number
+race:enum( "indian" "asian" "black" "hawaiian" "white" "other")
+ethnicity:enum("blank", "hispanic", "not_hispanic" or "declined")
+gender
+cell_phone
+doctor
+
+
+employer_city
+employer_state
+employer: "string",
+employer_zip_code
+employer_address
+
+
+patient_status:string (Patient status)
+Enum: "A" "I" "D"
+One of "A" (active), "I" (inactive), "D" (inactive-deceased)
+preferred_language:'eng'
+medication_history_consent:"string"
+
+primary_insurance.photo_front
+primary_insurance.photo_back
+primary_insurance.insurance_group_number
+primary_insurance.insurance_company
+primary_insurance.insurance_payer_id
+primary_insurance.insurance_plan_type
