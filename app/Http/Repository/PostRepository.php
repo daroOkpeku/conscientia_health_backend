@@ -8,7 +8,7 @@ use App\Jobs\ProcessPrimary_insurance;
 use App\Jobs\Processprofile_create;
 use App\Jobs\Processprofile_edit;
 use App\Models\Profile;
-
+use ImageKit\ImageKit;
 class PostRepository implements PostRespositoryinterface
 {
 
@@ -115,21 +115,49 @@ public function primary_insurance_create($request)
 }
 
 
-public function uploadprofileimage($request){
-    $proflie = Profile::find($request->id);
-    $fileContent = file_get_contents($request->file('image')->getRealPath());
-    $imglink = $this->uploadprofileimage($fileContent);
-    if($proflie){
-        // $imglink = $this->uploadImage($fileContent); 
-      
-      $proflie->update([
-        "patient_photo"=>$imglink
-      ]);
+public function uploadImage($image)
+{
+    $imageKit = new ImageKit(
+        "public_ubzgMmE6xfs3M3PhH7b0RdPCNVs=",
+        "private_i8k1ateHiH63X3zO4lxSNn6bLWk=",
+        "https://ik.imagekit.io/mhtpe5cvo"
+    );
+
+    // Convert image to base64 and upload
+    $fileContent = base64_encode($image);  // Make sure image is in base64 format
+    $uploadFile = $imageKit->uploadFile([
+        'file' => $fileContent,
+        'fileName' => 'new-file'   // Unique file name
+    ]);
+
+    return $uploadFile;
+}
+
+public function uploadprofileimage($request)
+{
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $path = file_get_contents($file->getRealPath());  // This works for a single file
+        $profile = Profile::where("user_id", $request->user_id)->first();
+    
+        $imglink = $this->uploadImage($path);
+
+        if ($profile) {
+            // Update existing profile with new image URL
+            $profile->update([
+                "patient_photo" =>$imglink->result->url
+            ]);
+            return response()->json(["success" => "Your image has been updated"], 200);
+        } else {
+            // Create a new profile with the uploaded image URL
+            Profile::create([
+                "patient_photo" =>$imglink->result->url,
+                "user_id" => $request->user_id
+            ]);
+            return response()->json(["success" => "Your image has been uploaded"], 200);
+        }
     }else{
-        Profile::create([
-          "patient_photo"=>$imglink,
-          "user_id"=>$request->user_id
-        ]);
+        return response()->json(['error'=>"something went wrong"],200);
     }
 }
 

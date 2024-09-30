@@ -33,10 +33,11 @@ return new class extends Migration
             $table->string("doctor")->nullable();
             $table->enum("patient_status", ["A", "I", "D"])->nullable();
             $table->string("preferred_language")->nullable();
-            $table->bigIncrements("user_id");
+            $table->unsignedBigInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
+
     }
 
     /**

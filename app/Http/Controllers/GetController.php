@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AppToken;
 use App\Models\Doctors;
+use App\Models\Profile;
 use App\Models\User;
 use DateTime;
 use DateTimeZone;
@@ -259,6 +260,15 @@ public function state_age_check(Request $request){
     }
 
 }
-// ["FL","TX","NJ"]
+
+
+public function get_profile($editid){
+if($editid){
+ $profile = Profile::where("user_id", $editid)->first();
+return response()->json(["success"=>$profile],200);
+}else{
+return response()->json(["error"=>"does not exist"]);
+}
+}
 
 }

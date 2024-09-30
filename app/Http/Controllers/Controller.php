@@ -33,9 +33,9 @@ class Controller extends BaseController
     {
 
         $imageKit = new ImageKit(
-            "public_IHlr65pELltC8TesgCq2+rPenBA=",
-            "private_JNStaABpZ3j2HqOlsNyL8Erc2Og=",
-            "https://ik.imagekit.io/ca4ajrkzu"
+            "public_ubzgMmE6xfs3M3PhH7b0RdPCNVs=",
+            "private_i8k1ateHiH63X3zO4lxSNn6bLWk=",
+            "https://ik.imagekit.io/mhtpe5cvo"
         );
         $fileContent = $image;
         $uploadFile = $imageKit->uploadFile([

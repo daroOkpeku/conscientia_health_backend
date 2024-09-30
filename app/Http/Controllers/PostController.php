@@ -6,8 +6,9 @@ use App\Http\Repository\Contracts\PostRespositoryinterface;
 use App\Http\Requests\ContactRequest;
 use App\Http\Requests\PrimaryRequest;
 use App\Http\Requests\ProfileCreateRequest;
+use App\Http\Requests\UploadRequest;
 use Illuminate\Http\Request;
-
+use App\Models\Profile;
 class PostController extends Controller
 {
     public $postmethod;
@@ -25,11 +26,15 @@ class PostController extends Controller
      return $this->postmethod->profile_create($request);
     }
 
+    public function profile_edit(ProfileCreateRequest $request){
+        return $this->postmethod->profile_edit($request);
+    }
+
     public function primary_insurance(PrimaryRequest $request){
      return $this->postmethod->primary_insurance_create($request);
     }
 
-    public function uploadprofileimage(Request $request){
-     return $this->postmethod->uploadprofileimage($request);
+    public function uploadprofileimage(UploadRequest $request){
+      return $this->postmethod->uploadprofileimage($request);
     }
 }

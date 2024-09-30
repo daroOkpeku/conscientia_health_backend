@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -68,11 +69,17 @@ Route::controller(PostController::class)->group(function(){
 // profiles
 
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(PostController::class)->group(function(){
         Route::post("/profile_create", "profile_create");
+        Route::put("profile_edit", "profile_edit");
         Route::post("/uploadprofileimage", "uploadprofileimage");
+    });
+
+    Route::controller(GetController::class)->group(function(){
+        Route::get("/get_profile/{editid}", "get_profile");
+
     });
 
 });

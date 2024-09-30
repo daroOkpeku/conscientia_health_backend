@@ -16,7 +16,7 @@ use App\Jobs\ProcessFirstClinicBooking;
 use App\Jobs\ProcessSecondBooking;
 use App\Jobs\ProcessSecondClinicBooking;
 use App\Models\Booking;
-
+use Illuminate\Support\Facades\Auth;
 class AuthRepository implements AuthRepositoryInterface
 {
 
@@ -41,37 +41,46 @@ class AuthRepository implements AuthRepositoryInterface
     }
 
     public function login($request){
-      $emailcheck = User::where('email', $request->email)->first();
+      $emailcheck =optional(User::where('email', $request->email))->first();
+  
+    $credentials = $request->only('email', 'password');
+       
+    if ( $emailcheck &&  Auth::attempt($credentials) ) {
 
-      if (!$emailcheck || !Hash::check($request->password, $emailcheck->password)) {
-        return response()->json(['error' => "Incorrect email or password."], 401);
-    }
+        if ($emailcheck->confirm_status != 1) {
+            return response()->json(['error' => "Your email is not confirmed."], 403);
+        }
 
-    if ($emailcheck->confirm_status != 1) {
+        $token = $emailcheck->createToken('auth-token')->plainTextToken;
+        $otp = $this->generateotpcode();
+        $emailcheck->update([
+            'api_token' => $token,
+            'otp' => $otp,
+            'otp_status' => 'active',
+        ]);
+    
+        $data = [
+            'token' => $token,
+            'email' => $emailcheck->email,
+            'role' => $emailcheck->user_type,
+            'id' => $emailcheck->id,
+            'otp'=>$emailcheck->otp,
+            'otp_status'=>$emailcheck->otp_status
+        ];
+        // Sentotpevent::dispatch($otp, $emailcheck->email);
+        return response()->json([
+            'success' => $data,
+            'message' => 'Your have logged in successfully'
+        ], 200);
+
+    }else{
         return response()->json(['error' => "Your email is not confirmed."], 403);
+
     }
 
-    $token = $emailcheck->createToken('auth-token')->plainTextToken;
-    $otp = $this->generateotpcode();
-    $emailcheck->update([
-        'api_token' => $token,
-        'otp' => $otp,
-        'otp_status' => 'active',
-    ]);
+   
 
-    $data = [
-        'token' => $token,
-        'email' => $emailcheck->email,
-        'role' => $emailcheck->user_type,
-        'id' => $emailcheck->id,
-        'otp'=>$emailcheck->otp,
-        'otp_status'=>$emailcheck->otp_status
-    ];
-    // Sentotpevent::dispatch($otp, $emailcheck->email);
-    return response()->json([
-        'success' => $data,
-        'message' => 'Your have logged in successfully'
-    ], 200);
+
 
     }
 
