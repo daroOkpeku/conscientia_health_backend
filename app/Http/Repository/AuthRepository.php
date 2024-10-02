@@ -63,6 +63,8 @@ class AuthRepository implements AuthRepositoryInterface
             'token' => $token,
             'email' => $emailcheck->email,
             'role' => $emailcheck->user_type,
+            'firstname'=>$emailcheck->firstname,
+            'lastname'=>$emailcheck->lastname,
             'id' => $emailcheck->id,
             'otp'=>$emailcheck->otp,
             'otp_status'=>$emailcheck->otp_status

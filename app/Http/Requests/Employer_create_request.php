@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PrimaryRequest extends FormRequest
+class Employer_create_request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,13 +22,13 @@ class PrimaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "insurance_group_number"=>"required|string",
-            "insurance_company"=>"required|string",
-            "insurance_payer_id"=>"required|regex:/^[a-zA-Z0-9+\-._(): ]+$/",
-            "insurance_plan_type"=>"required|string",
-            "insurance_image_font"=>"required|string",
-            "insurance_image_back"=> "required|string"
-
-            ];
+            "employer_name"=>"required|string",
+            "employer_state"=>"required|string",
+             "employer_city"=>"required|string",
+             "employer_zip_code"=>"required|string",
+              "employer_address"=>"required|string",
+              "user_id"=>"required|integer",
+              "id"=>"integer|nullable"
+        ];
     }
 }

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string("employer_city")->nullable();
             $table->string("employer_zip_code")->nullable();
             $table->string("employer_address")->nullable();
+            $table->unsignedBigInteger("user_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

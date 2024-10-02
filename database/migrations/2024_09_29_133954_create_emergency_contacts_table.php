@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string("emergency_contact_name")->nullable();
             $table->string("emergency_contact_phone")->nullable();
             $table->string("emergency_contact_relation")->nullable();
+            $table->unsignedBigInteger("user_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

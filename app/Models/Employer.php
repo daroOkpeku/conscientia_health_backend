@@ -14,6 +14,7 @@ class Employer extends Model
        "employer_state",
         "employer_city",
         "employer_zip_code",
-         "employer_address"
+         "employer_address",
+         "user_id"
     ];
 }

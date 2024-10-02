@@ -75,10 +75,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("/profile_create", "profile_create");
         Route::put("profile_edit", "profile_edit");
         Route::post("/uploadprofileimage", "uploadprofileimage");
+        Route::put("change_password", "change_password");
+        Route::post("primary_insurance", "primary_insurance");
+        Route::put("primary_insurance_edit", "primary_insurance_edit");
+        Route::post("secondary_insurance_create", "secondary_insurance_create");
+        Route::put("secondary_insurance_edit", "secondary_insurance_edit");
+        Route::post("employer_create", "employer_create");
+        Route::put("employer_edit", "employer_edit");
+        Route::post("responsible_party_create", "responsible_party_create");
+
     });
 
     Route::controller(GetController::class)->group(function(){
         Route::get("/get_profile/{editid}", "get_profile");
+        Route::get("/primary_get/{user_id}", "primary_get");
+        Route::get("/secondary_get/{user_id}", "secondary_get");
+        Route::post("/uploadPicture", "uploadPicture");
 
     });
 

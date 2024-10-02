@@ -2,17 +2,17 @@
 
 namespace App\Jobs;
 
-use App\Models\Primary_insurance;
+use App\Models\Secondary_insurance;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class ProcessPrimary_insurance implements ShouldQueue
+class ProcessSecondary_insurance implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $data;
+     public $data;
     /**
      * Create a new job instance.
      */
@@ -26,9 +26,7 @@ class ProcessPrimary_insurance implements ShouldQueue
      */
     public function handle(): void
     {
-    
-       
-        Primary_insurance::create([
+        Secondary_insurance::create([
             "photo_front"=>$this->data["insurance_image_font"],
             "photo_back"=>$this->data["insurance_image_back"],
             "insurance_group_number"=>$this->data["insurance_group_number"],
@@ -37,6 +35,5 @@ class ProcessPrimary_insurance implements ShouldQueue
             "insurance_plan_type"=>$this->data["insurance_plan_type"],
             "user_id"=>$this->data["user_id"]
         ]);
-        
     }
 }

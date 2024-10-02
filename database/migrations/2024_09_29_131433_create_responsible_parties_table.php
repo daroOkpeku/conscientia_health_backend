@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("responsible_party_email")->nullable();
             $table->string("responsible_party_phone")->nullable();
             $table->string("responsible_party_relation")->nullable();
+            $table->unsignedBigInteger("user_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

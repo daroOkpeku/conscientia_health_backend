@@ -15,6 +15,7 @@ class Secondary_insurance extends Model
         "insurance_group_number",
          "insurance_company",
            "insurance_payer_id",
-           "insurance_plan_type"
+           "insurance_plan_type",
+           "user_id"
     ];
 }

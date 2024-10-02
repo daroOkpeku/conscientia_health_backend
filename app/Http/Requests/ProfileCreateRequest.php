@@ -36,7 +36,7 @@ class ProfileCreateRequest extends FormRequest
             "zip_code"=>"required|string",
             "gender"=>"required|regex:/^[a-zA-Z0-9+\-._(): ]+$/",
             // "chart_id"=>"required|string",
-            "doctor"=>"required|string",
+            "doctor"=>"string|nullable",
             // "patient_status"=>"required|string",
             // "preferred_language"=>"required|string",
 

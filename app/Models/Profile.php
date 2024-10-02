@@ -33,4 +33,8 @@ class Profile extends Model
       "preferred_language",
       'user_id'
     ];
+
+    public function userData(){
+        return $this->belongsTo(User::class, "user_id", "id");
+    }
 }

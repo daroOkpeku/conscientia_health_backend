@@ -18,6 +18,7 @@ class Responsible_party extends Model
         "responsible_party_name",
         "responsible_party_email",
         "responsible_party_phone",
-        "responsible_party_relation"
+        "responsible_party_relation",
+        "user_id"
     ];
 }

@@ -19,6 +19,8 @@ return new class extends Migration
               $table->string("insurance_company")->nullable();
                $table->string("insurance_payer_id")->nullable();
                 $table->string("insurance_plan_type")->nullable();
+                $table->unsignedBigInteger("user_id");
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');    
             $table->timestamps();
         });
     }

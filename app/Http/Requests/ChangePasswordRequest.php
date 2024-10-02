@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PrimaryRequest extends FormRequest
+class ChangePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,9 @@ class PrimaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "insurance_group_number"=>"required|string",
-            "insurance_company"=>"required|string",
-            "insurance_payer_id"=>"required|regex:/^[a-zA-Z0-9+\-._(): ]+$/",
-            "insurance_plan_type"=>"required|string",
-            "insurance_image_font"=>"required|string",
-            "insurance_image_back"=> "required|string"
-
-            ];
+            "email"=>"required|email",
+            "old_password"=>"required|string",
+            'password' => ['required', 'string', Password::min(8)->letters()->numbers()->symbols()],
+        ];
     }
 }

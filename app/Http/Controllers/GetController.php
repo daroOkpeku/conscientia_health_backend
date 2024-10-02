@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProfileResource;
 use App\Models\AppToken;
 use App\Models\Doctors;
+use App\Models\Primary_insurance;
 use App\Models\Profile;
+use App\Models\Secondary_insurance;
 use App\Models\User;
 use DateTime;
 use DateTimeZone;
@@ -19,6 +22,7 @@ use GuzzleHttp\Psr7\Request as Req;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use ImageKit\ImageKit;
 class GetController extends Controller
 {
     public function gencaptcha(){
@@ -264,11 +268,48 @@ public function state_age_check(Request $request){
 
 public function get_profile($editid){
 if($editid){
- $profile = Profile::where("user_id", $editid)->first();
-return response()->json(["success"=>$profile],200);
+ $profile = Profile::with('userData')->where("user_id", $editid)->first();
+if($profile){
+    $data = ProfileResource::make($profile)->resolve();
+    // $data = $profile->userdata;
+    return response()->json(["success"=>$data],200);
+}
 }else{
 return response()->json(["error"=>"does not exist"]);
 }
+}
+
+public function primary_get($user_id){
+$primary = Primary_insurance::where("user_id", $user_id)->first();
+if($primary){
+    return response()->json(["success"=>$primary]);
+}
+}
+
+public function secondary_get($user_id){
+    $primary = Secondary_insurance::where("user_id", $user_id)->first();
+    if($primary){
+        return response()->json(["success"=>$primary]);
+    }
+    }
+    
+
+
+public function uploadPicture(Request $request){
+    $imageKit = new ImageKit(
+        "public_ubzgMmE6xfs3M3PhH7b0RdPCNVs=",
+        "private_i8k1ateHiH63X3zO4lxSNn6bLWk=",
+        "https://ik.imagekit.io/mhtpe5cvo"
+    );
+
+    // Convert image to base64 and upload
+    $fileContent = base64_encode(file_get_contents($request->file('image')->getRealPath()));  // Make sure image is in base64 format
+    $uploadFile = $imageKit->uploadFile([
+        'file' => $fileContent,
+        'fileName' => 'new-file'   // Unique file name
+    ]);
+
+    return response()->json(["success"=>$uploadFile->result->url]);
 }
 
 }
