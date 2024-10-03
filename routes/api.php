@@ -83,15 +83,23 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("employer_create", "employer_create");
         Route::put("employer_edit", "employer_edit");
         Route::post("responsible_party_create", "responsible_party_create");
-
+        Route::put("/responsible_party_edit", "responsible_party_edit");
+        Route::post("/emergency_contact_create", "emergency_contact_create");
+        Route::post("/emergency_contact_edit", "emergency_contact_edit");
     });
 
     Route::controller(GetController::class)->group(function(){
         Route::get("/get_profile/{editid}", "get_profile");
         Route::get("/primary_get/{user_id}", "primary_get");
         Route::get("/secondary_get/{user_id}", "secondary_get");
+        Route::get("/employer_get/{user_id}", "employer_get");
         Route::post("/uploadPicture", "uploadPicture");
+        Route::get("/responsible_party_get/{user_id}", "responsible_party_get");
+        Route::get("/emergency_get/{user_id}", "emergency_get");
+    });
 
+    Route::controller(AuthController::class)->group(function(){
+       Route::get("/logout", "logout");
     });
 
 });

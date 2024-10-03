@@ -3,6 +3,8 @@
 namespace App\Http\Repository;
 
 use App\Http\Repository\Contracts\PostRespositoryinterface;
+use App\Jobs\emergency_contact_create_process;
+use App\Jobs\emergency_contact_edit_process;
 use App\Jobs\ProcessContact;
 use App\Jobs\ProcessEmployee_create;
 use App\Jobs\ProcessEmployee_edit;
@@ -13,11 +15,14 @@ use App\Jobs\Processprofile_edit;
 use App\Jobs\ProcessSecondary_insurance;
 use App\Jobs\ProcessSecondary_insurance_edit;
 use App\Jobs\Responsible_party_create_request;
+use App\Jobs\Responsible_party_edit_process;
 use App\Models\Booking;
 use App\Models\Doctors;
+use App\Models\Emergency_contact;
 use App\Models\Employer;
 use App\Models\Primary_insurance;
 use App\Models\Profile;
+use App\Models\Responsible_party;
 use App\Models\Secondary_insurance;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -332,7 +337,7 @@ public function employee_edit($request){
           "user_id"=>$request->user_id
     ];
     $employee = Employer::where(["user_id"=>$request->user_id])->first();
-    
+
     if($employee){
        ProcessEmployee_edit::dispatchSync($data, $employee);
        return response()->json(["success"=>"you have updated your Employee details"]);
@@ -343,15 +348,60 @@ public function employee_edit($request){
 
 public function responsible_party_create($request){
     $data = [
-        "employer_name"=>$request->employer_name,
-        "employer_state"=>$request->employer_state,
-         "employer_city"=>$request->employer_city,
-         "employer_zip_code"=>$request->employer_zip_code,
-          "employer_address"=>$request->employer_address,
-          "user_id"=>$request->user_id
+        "responsible_party_name"=>$request->responsible_party_name,
+        "responsible_party_email"=>$request->responsible_party_email,
+        "responsible_party_phone"=>$request->responsible_party_phone,
+        "responsible_party_relation"=>$request->responsible_party_relation,
+        "user_id"=>$request->user_id
     ];
     Responsible_party_create_request::dispatchSync($data);
     return response()->json(["success"=>"you have inserted your responsible party details"]);
+}
+
+
+public function responsible_party_edit($request){
+    $data = [
+        "responsible_party_name"=>$request->responsible_party_name,
+        "responsible_party_email"=>$request->responsible_party_email,
+        "responsible_party_phone"=>$request->responsible_party_phone,
+        "responsible_party_relation"=>$request->responsible_party_relation,
+        "user_id"=>$request->user_id
+    ];   
+    $response = Responsible_party::where("user_id", $request->user_id)->first();
+    if($response){
+        Responsible_party_edit_process::dispatchSync($data, $response);
+        return response()->json(["success"=>"you have edited your responsible party details"]);    
+    }else{
+        return response()->json(["error"=>"something went wrong"]);
+    }
+}
+
+public function emergency_contact_create($request){
+    $data =  [
+        "emergency_contact_name"=>$request->emergency_contact_name,
+        "emergency_contact_phone"=>$request->emergency_contact_phone,
+        "emergency_contact_relation"=>$request->emergency_contact_relation,
+        "user_id"=>$request->user_id
+    ];
+
+    emergency_contact_create_process::dispatchSync($data);
+    return response()->json(["success"=>"you have edited your emergency contact details"]);
+}
+
+public function emergency_contact_edit($request){
+    $data =  [
+        "emergency_contact_name"=>$request->emergency_contact_name,
+        "emergency_contact_phone"=>$request->emergency_contact_phone,
+        "emergency_contact_relation"=>$request->emergency_contact_relation,
+        "user_id"=>$request->user_id
+    ];   
+    $emergency = Emergency_contact::where("user_id", $request->user_id)->first();
+    if($emergency){
+        emergency_contact_edit_process::dispatch($data, $emergency);
+        return response()->json(["success"=>"you have edited your emergency contact details"]);    
+    }else{
+        return response()->json(["error"=>"something went wrong"]);   
+    }
 
 }
 

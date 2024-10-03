@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProfileResource;
 use App\Models\AppToken;
 use App\Models\Doctors;
+use App\Models\Emergency_contact;
+use App\Models\Employer;
 use App\Models\Primary_insurance;
 use App\Models\Profile;
+use App\Models\Responsible_party;
 use App\Models\Secondary_insurance;
 use App\Models\User;
 use DateTime;
@@ -184,10 +187,10 @@ public function showtest(Request $request){
 }
 
 public function list_doctors(Request $request){
-  $doctors = Doctors::whereNotNull('job_title')
-  ->where(['is_account_suspended'=> 0, 'is_new_patient'=>1])->where('first_name', '!=', 'Simbiat')
-  ->inRandomOrder()
-  ->take(3)
+  $doctors = Doctors::whereNotNull('job_title')->whereIn('last_name', ['Anara', 'Odili', 'Asiamahasare'])
+  ->where(['is_account_suspended'=> 0, 'is_new_patient'=>1])
+//   ->inRandomOrder()
+//   ->take(3)
   ->get();
   $checktoken = AppToken::whereNotNull("code")->where("code", "!=", "")->first();
 
@@ -292,7 +295,36 @@ public function secondary_get($user_id){
         return response()->json(["success"=>$primary]);
     }
     }
-    
+
+public function employer_get($user_id){
+    $employer = Employer::where("user_id", $user_id)->first();
+    if($employer){
+     return response()->json(["success"=>$employer]);
+    }else{
+        return response()->json(["error"=>"something went wrong"]);
+    }
+}
+
+
+public function responsible_party_get($user_id){
+    $responsible = Responsible_party::where("user_id", $user_id)->first();
+    if($responsible){
+       return response()->json(["success"=>$responsible]);
+    }else{
+        return response()->json(["error"=>"something went wrong"]);
+    }
+}
+
+
+public function emergency_get($user_id){
+    $responsible = Emergency_contact::where("user_id", $user_id)->first();
+    if($responsible){
+       return response()->json(["success"=>$responsible]);
+    }else{
+        return response()->json(["error"=>"something went wrong"]);
+    }
+}
+
 
 
 public function uploadPicture(Request $request){

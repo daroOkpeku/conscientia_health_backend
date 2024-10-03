@@ -57,4 +57,9 @@ class AuthController extends Controller
     public function set_password(Resetrequest $request){
         return $this->authinterface->set_password($request);
     }
+
+    public function logout(){
+        auth()->user()->tokens()->delete();
+        return response()->json(['success'=>'logged out']);
+     }
 }

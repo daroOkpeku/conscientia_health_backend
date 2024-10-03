@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Employer_create_request extends FormRequest
+class Emergency_request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,10 @@ class Employer_create_request extends FormRequest
     public function rules(): array
     {
         return [
-            "employer_name"=>"required|string",
-            "employer_state"=>"required|string",
-             "employer_city"=>"required|string",
-             "employer_zip_code"=>"required|string",
-              "employer_address"=>"required|string",
-              "user_id"=>"required|integer",
-              "id"=>"integer|nullable"
+            "emergency_contact_name"=>"required|string",
+            "emergency_contact_phone"=>"required|string",
+            "emergency_contact_relation"=>"required|string",
+            "user_id"=>"integer|nullable"
         ];
     }
 }

@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Repository\Contracts\PostRespositoryinterface;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ContactRequest;
+use App\Http\Requests\Emergency_request;
 use App\Http\Requests\Employer_create_request;
 use App\Http\Requests\PrimaryRequest;
 use App\Http\Requests\ProfileCreateRequest;
+use App\Http\Requests\Responsible_Party_Create_request;
 use App\Http\Requests\UploadRequest;
+use App\Models\Emergency_contact;
 use App\Models\Primary_insurance;
 use Illuminate\Http\Request;
 use App\Models\Profile;
@@ -68,8 +71,20 @@ class PostController extends Controller
         return $this->postmethod->employee_edit($request);
     }
 
-    public function responsible_party_create(Request $request){
+    public function responsible_party_create(Responsible_Party_Create_request $request){
         return $this->postmethod->responsible_party_create($request);
+    }
+
+    public function responsible_party_edit(Responsible_Party_Create_request $request){
+      return $this->postmethod->responsible_party_edit($request);
+    }
+
+    public function emergency_contact_create(Emergency_request $request){
+        return $this->postmethod->emergency_contact_create($request);
+    }
+
+    public function emergency_contact_edit(Emergency_request $request){
+        return $this->postmethod->emergency_contact_edit($request);
     }
 
 }

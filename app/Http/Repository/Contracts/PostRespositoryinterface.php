@@ -18,4 +18,7 @@ public function secondary_insurance_edit($request);
 public function employee_create($request);
 public function employee_edit($request);
 public function responsible_party_create($request);
+public function responsible_party_edit($request);
+public function emergency_contact_create($request);
+public function emergency_contact_edit($request);
 }
