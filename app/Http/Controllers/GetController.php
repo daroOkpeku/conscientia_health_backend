@@ -577,7 +577,7 @@ public function uploadPatientCreate()
 {
     $token = AppToken::latest()->first();
     $client = new Client();
-    
+
     $profiles = Profile::with([
         "primaryinsurancedata",
         "secondaryinsurancedata",
@@ -609,11 +609,11 @@ public function uploadPatientCreate()
                 ],
                 [
                     'name' => 'first_name',
-                    'contents' => "Anton testing"  // Hardcoded values, you can replace with actual data
+                    'contents' => "Clark testing"  // Hardcoded values, you can replace with actual data
                 ],
                 [
                     'name' => 'last_name',
-                    'contents' => "Willams"
+                    'contents' => "Kent"
                 ],
                 [
                     'name' => 'nick_name',
@@ -699,6 +699,27 @@ public function uploadPatientCreate()
                     'name' => 'emergency_contact_name',
                     'contents' => optional($profile->emergencydata)->emergency_contact_name ?? ''
                 ],
+
+                        [
+                            'name' => 'employer_city',
+                            'contents' => optional($profile->employeedata)->employer_city ?? ''
+                        ],
+                        [
+                            'name' => 'employer_state',
+                            'contents' => optional($profile->employeedata)->employer_state ?? ''
+                        ],
+                        [
+                            'name' => 'employer',
+                            'contents' => optional($profile->employeedata)->employer_name?? ''
+                        ],
+                        [
+                            'name' => 'employer_zip_code',
+                            'contents' => optional($profile->employeedata)->employer_zip_code ?? ''
+                        ],
+                        [
+                            'name' => 'employer_address',
+                            'contents' => optional($profile->employeedata)->employer_address ?? ''
+                        ],
                 [
                     'name' => 'date_of_birth',
                     'contents' => $dateOfBirth
@@ -740,7 +761,7 @@ public function uploadPatientCreate()
 
 
             // Add patient photo
-         
+
 
             // Send the request
             try {
@@ -776,7 +797,7 @@ public function uploadPatientCreate()
 // working
 // {
 //     $token = AppToken::latest()->first();
-    
+
 //     $profiles = Profile::with([
 //         "primaryinsurancedata",
 //         "secondaryinsurancedata",
@@ -792,7 +813,7 @@ public function uploadPatientCreate()
 
 //             // Format date of birth
 //             $dateOfBirth = Carbon::createFromTimestamp(strtotime($profile->date_of_birth))->format('Y-m-d');
-            
+
 //             if (!$profile->primaryinsurancedata) {
 //                 return response()->json(["error" => "Primary insurance data not found for profile ID: {$profile->id}"]);
 //             }
@@ -825,7 +846,7 @@ public function uploadPatientCreate()
 //                 'emergency_contact_relation' => optional($profile->emergencydata)->emergency_contact_relation ?? '',
 //                 'emergency_contact_name' => optional($profile->emergencydata)->emergency_contact_name ?? '',
 //                 'date_of_birth' => $dateOfBirth,
-               
+
 //                 // 'primary_insurance.insurance_group_name' => optional($profile->primaryinsurancedata)->insurance_group_number ?? '',
 //                 // 'primary_insurance.insurance_company' => optional($profile->primaryinsurancedata)->insurance_company ?? '',
 //                 // 'primary_insurance.insurance_payer_id' => optional($profile->primaryinsurancedata)->insurance_payer_id ?? '',
@@ -833,7 +854,7 @@ public function uploadPatientCreate()
 //                 // "primary_insurance.is_subscriber_the_patient" => true,
 //                 'primary_insurance.photo_front'=>curl_file_create($profile->primaryinsurancedata->photo_front, 'image/jpeg', 'photo_front.jpg')??" ",
 //                 'primary_insurance.photo_back'=>curl_file_create($profile->primaryinsurancedata->photo_back, 'image/jpeg', 'photo_back.jpg')??" "
-              
+
 //             ];
 
 //             // Add files (insurance photos, patient photo)
