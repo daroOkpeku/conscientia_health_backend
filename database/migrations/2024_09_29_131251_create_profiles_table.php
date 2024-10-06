@@ -35,6 +35,8 @@ return new class extends Migration
             $table->string("preferred_language")->nullable();
             $table->unsignedBigInteger("user_id");
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('drchrono_patient_id')->nullable();
+            $table->boolean("push_to_drchrono")->default(false);
             $table->timestamps();
         });
 
