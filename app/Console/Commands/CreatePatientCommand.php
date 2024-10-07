@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Events\patientEvent;
 use Illuminate\Console\Command;
 use App\Models\AppToken;
 use App\Models\Doctors;
@@ -112,11 +113,11 @@ class CreatePatientCommand extends Command
                     ],
                     [
                         'name' => 'first_name',
-                        'contents' => "Clark testing"  // Hardcoded values, you can replace with actual data
+                        'contents' =>$profile->first_name  
                     ],
                     [
                         'name' => 'last_name',
-                        'contents' => "Kent"
+                        'contents' =>$profile->last_name
                     ],
                     [
                         'name' => 'nick_name',
@@ -294,6 +295,7 @@ class CreatePatientCommand extends Command
                         "push_to_drchrono" => 1
                     ]);
                     // Return success response
+                    patientEvent::dispatch($updatedata["chart_id"], $profile->first_name, $profile->last_name);
                     return response()->json(["success" => json_decode($response->getBody(), true)]);
                 } catch (\Exception $e) {
                     return response()->json(["error" => $e->getMessage()], 400);

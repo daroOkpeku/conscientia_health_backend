@@ -114,11 +114,11 @@ class CreateOnPatientCreate extends Command
                         ],
                         [
                             'name' => 'first_name',
-                            'contents' => "Zeter testing"  // Hardcoded values, you can replace with actual data
+                            'contents' =>$profile->first_name  
                         ],
                         [
                             'name' => 'last_name',
-                            'contents' => "james"
+                            'contents' =>$profile->last_name
                         ],
                         [
                             'name' => 'nick_name',
