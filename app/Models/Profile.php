@@ -33,7 +33,8 @@ class Profile extends Model
       "preferred_language",
       'user_id',
       'drchrono_patient_id',
-      "push_to_drchrono"
+      "push_to_drchrono",
+      "onpatient_push_drchrono"
     ];
 
     public function userData(){

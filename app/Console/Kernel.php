@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // $schedule->command('expird:otp')->everyTenSeconds();
         $schedule->command('doctor:crons')->everyTwoSeconds();
+        $schedule->command('create:patient-command')->everyFiveSeconds();
+        $schedule->command('create:on-patient-create')->everyFiveSeconds();
     }
 
     /**

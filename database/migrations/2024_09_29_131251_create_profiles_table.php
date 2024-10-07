@@ -37,6 +37,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('drchrono_patient_id')->nullable();
             $table->boolean("push_to_drchrono")->default(false);
+            $table->boolean("onpatient_push_drchrono")->default(false);
             $table->timestamps();
         });
 

@@ -37,7 +37,8 @@ Route::get("/getAccessToken", "getAccessToken");
 Route::get("/list_doctors", "list_doctors");
 Route::get("/doctor_availiable", "doctor_availiable");
 Route::get("/state_age_check", "state_age_check");
-Route::get("/uploadPatientCreate", "uploadPatientCreate");
+// Route::get("/uploadPatientCreate", "uploadPatientCreate");
+// Route::get("/on_patient_upload", "on_patient_upload");
 });
 // https://app.drchrono.com/api/appointments
 
