@@ -7,6 +7,7 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ContactRequest;
 use App\Http\Requests\Emergency_request;
 use App\Http\Requests\Employer_create_request;
+use App\Http\Requests\Personal_signed_request;
 use App\Http\Requests\PrimaryRequest;
 use App\Http\Requests\ProfileCreateRequest;
 use App\Http\Requests\Responsible_Party_Create_request;
@@ -85,6 +86,10 @@ class PostController extends Controller
 
     public function emergency_contact_edit(Emergency_request $request){
         return $this->postmethod->emergency_contact_edit($request);
+    }
+
+    public function personal_signed(Personal_signed_request $request){
+        return $this->postmethod->personal_signed($request);
     }
 
 }

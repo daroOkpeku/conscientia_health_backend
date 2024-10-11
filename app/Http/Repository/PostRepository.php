@@ -8,6 +8,7 @@ use App\Jobs\emergency_contact_edit_process;
 use App\Jobs\ProcessContact;
 use App\Jobs\ProcessEmployee_create;
 use App\Jobs\ProcessEmployee_edit;
+use App\Jobs\ProcesspersonalSigned;
 use App\Jobs\ProcessPrimary_insurance;
 use App\Jobs\ProcessPrimary_insurance_edit;
 use App\Jobs\Processprofile_create;
@@ -366,11 +367,11 @@ public function responsible_party_edit($request){
         "responsible_party_phone"=>$request->responsible_party_phone,
         "responsible_party_relation"=>$request->responsible_party_relation,
         "user_id"=>$request->user_id
-    ];   
+    ];
     $response = Responsible_party::where("user_id", $request->user_id)->first();
     if($response){
         Responsible_party_edit_process::dispatchSync($data, $response);
-        return response()->json(["success"=>"you have edited your responsible party details"]);    
+        return response()->json(["success"=>"you have edited your responsible party details"]);
     }else{
         return response()->json(["error"=>"something went wrong"]);
     }
@@ -394,15 +395,25 @@ public function emergency_contact_edit($request){
         "emergency_contact_phone"=>$request->emergency_contact_phone,
         "emergency_contact_relation"=>$request->emergency_contact_relation,
         "user_id"=>$request->user_id
-    ];   
+    ];
     $emergency = Emergency_contact::where("user_id", $request->user_id)->first();
     if($emergency){
         emergency_contact_edit_process::dispatch($data, $emergency);
-        return response()->json(["success"=>"you have edited your emergency contact details"]);    
+        return response()->json(["success"=>"you have edited your emergency contact details"]);
     }else{
-        return response()->json(["error"=>"something went wrong"]);   
+        return response()->json(["error"=>"something went wrong"]);
     }
 
+}
+
+public function personal_signed($request){
+    $data =[
+        "image"=>$request->image,
+        "name"=>$request->name,
+        "user_id"=>$request->user_id
+    ];
+    ProcesspersonalSigned::dispatchSync($data);
+    return response()->json(["success"=>"you have succesfully uploaded the document"]);
 }
 
 }

@@ -21,4 +21,5 @@ public function responsible_party_create($request);
 public function responsible_party_edit($request);
 public function emergency_contact_create($request);
 public function emergency_contact_edit($request);
+public function personal_signed($request);
 }

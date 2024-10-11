@@ -9,11 +9,14 @@
         "guzzlehttp/guzzle": "^7.9",
         "imagekit/imagekit": "^4.0",
         "laravel/framework": "^10.0",
+        "laravel/octane": "^2.5",
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.8",
         "mews/captcha": "^3.4",
-        "socialiteproviders/manager": "^4.6"
+        "socialiteproviders/manager": "^4.6",
+        "spiral/roadrunner-cli": "^2.6.0",
+        "spiral/roadrunner-http": "^3.3.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

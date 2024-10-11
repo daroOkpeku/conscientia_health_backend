@@ -8,6 +8,7 @@ use App\Models\AppToken;
 use App\Models\Doctors;
 use App\Models\Emergency_contact;
 use App\Models\Employer;
+use App\Models\Person_document;
 use App\Models\Primary_insurance;
 use App\Models\Profile;
 use App\Models\Responsible_party;
@@ -27,6 +28,7 @@ use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use ImageKit\ImageKit;
 
 class GetController extends Controller
@@ -92,19 +94,21 @@ class GetController extends Controller
     {
         // Define the parameters required for the authorization URL
         $code = $request->get('code');
-        $checktoken = AppToken::whereNotNull("code")->where("code", "!=", "")->first();
-        if (!$checktoken) {
+        $checktoken = AppToken::all();
+
+        if (count($checktoken) == 0) {
             $apptoken = AppToken::create([
                 "code" => $code
             ]);
             return response()->json(['success' => "successfull"], 200);
         } else {
-            $checktoken->update([
+            $checktokenexist = optional(AppToken::whereNotNull("code")->where("code", "!=", ""))->first();
+            $checktokenexist->update([
                 "code" => $code
             ]);
             return response()->json(['success' => "successfull"], 200);
         }
-    }
+     }
 
 
 
@@ -184,7 +188,8 @@ class GetController extends Controller
 
     public function list_doctors(Request $request)
     {
-        $doctors = Doctors::whereNotNull('job_title')->whereIn('first_name', ['Amaka', 'Chika', 'Vidalynn', 'Laracel'])
+        // Chika, Lauracel, Laura and Amaka
+        $doctors = Doctors::whereNotNull('job_title')->whereIn('first_name', ['Amaka', 'Chika',  'Laracel', 'Laura'])
             ->where(['is_account_suspended' => 0, 'is_new_patient' => 1])
             //   ->inRandomOrder()
             //   ->take(3)
@@ -235,6 +240,12 @@ class GetController extends Controller
 
 
             }
+
+            // $cacheKey = 'token' . $checktoken->access_token;
+            // $data = Cache::remember($cacheKey, 3600, function () use ($kod) {
+            //     return $kod;
+            // });
+
             return response()->json(['success' => $kod]);
         }
     }
@@ -273,6 +284,10 @@ class GetController extends Controller
             ->get();
 
         if ($doctors) {
+            // $cacheKey = 'doctor_' . $request->get('age') . '_' . $request->get('state');
+            // $data = Cache::remember($cacheKey, 3600, function () use ($doctors) {
+            //     return $doctors;
+            // });
             return response()->json(["success" => $doctors], 200);
         } else {
             return response()->json(['error' => "We don't have any providers in the state you selected. Please call us at +877-803-5342 or email us at info@conscientiahealth.com."], 200);
@@ -361,6 +376,34 @@ class GetController extends Controller
 
         return response()->json(["success" => $uploadFile->result->url]);
     }
+
+
+    public function uploadPictureBase(Request $request)
+{
+    // Check if the base64 image is present in the request
+    if ($request->has('image')) {
+        $imageKit = new ImageKit(
+            "public_ubzgMmE6xfs3M3PhH7b0RdPCNVs=",
+            "private_i8k1ateHiH63X3zO4lxSNn6bLWk=",
+            "https://ik.imagekit.io/mhtpe5cvo"
+        );
+
+        // The file is already base64-encoded on the frontend
+        $fileContent = $request->input('image');
+
+        // Upload to ImageKit
+        $uploadFile = $imageKit->uploadFile([
+            'file' => $fileContent,
+            'fileName' => 'new-file.pdf',  // Set appropriate file extension
+            'fileType' => 'application/pdf'
+        ]);
+
+        return response()->json(["success" => $uploadFile->result->url]);
+    } else {
+        return response()->json(['error' => 'No file uploaded'], 400);
+    }
+}
+
 
 
     // public function uploadPatientCreate(){
@@ -631,7 +674,7 @@ class GetController extends Controller
 
                 // Format date of birth
                 $dateString = $profile->date_of_birth;
-                $cleanDateString = substr($dateString, 0, strpos($dateString, '(')); 
+                $cleanDateString = substr($dateString, 0, strpos($dateString, '('));
 
                 $date = new \DateTime($cleanDateString);
                 $carbonDate = Carbon::instance($date);
@@ -851,7 +894,7 @@ class GetController extends Controller
 
     public function on_patient_upload()
     {
-     
+
         $token = AppToken::latest()->first();
         $client = new Client();
 
@@ -906,14 +949,14 @@ class GetController extends Controller
                 foreach ($profiles as $profile) {
                     $explodedoctor = explode(" ", $profile->doctor);
                     $doctors = Doctors::where("first_name", $explodedoctor[0])->first();
-    
+
                     // Format date of birth
                     $dateString = $profile->date_of_birth;
-                    $cleanDateString = substr($dateString, 0, strpos($dateString, '(')); 
-    
+                    $cleanDateString = substr($dateString, 0, strpos($dateString, '('));
+
                     $date = new \DateTime($cleanDateString);
                     $carbonDate = Carbon::instance($date);
-    
+
                     $formattedDate = $carbonDate->format('Y-m-d');
                     $dateOfBirth = $formattedDate;
                     if (!$profile->primaryinsurancedata) {
@@ -1025,7 +1068,7 @@ class GetController extends Controller
                             'name' => 'emergency_contact_name',
                             'contents' => optional($profile->emergencydata)->emergency_contact_name ?? ''
                         ],
-    
+
                         [
                             'name' => 'employer_city',
                             'contents' => optional($profile->employeedata)->employer_city ?? ''
@@ -1087,18 +1130,18 @@ class GetController extends Controller
                         //     'name' => 'primary_insurance.insurance_plan_type',
                         //     'contents' => optional($profile->primaryinsurancedata)->insurance_plan_type ?? " "
                         // ]
-    
+
                         [
                             'name'     => 'patient_photo',
                             'contents' => fopen($profile->patient_photo, 'r') ?? "",
                             'filename' => 'patient_photo.jpg'
                         ]
                     ];
-    
-    
+
+
                     // Add patient photo
-    
-    
+
+
                     // Send the request
                     try {
                         Log::info('Sending patient data to DrChrono API: ', $multipart);
@@ -1129,6 +1172,17 @@ class GetController extends Controller
 
 
 
+    public function recentuploaddoc(Request $request){
+        $person_document = Person_document::where([
+            'name' => $request->get("name"), 
+            'user_id' => $request->get("user_id")
+        ])->orderBy('created_at', 'desc')->first();
+     if($person_document){
+      return response()->json(["name"=>$request->get("name"), "status"=>true, 'link'=>$person_document->image],200);
+    }else{
+        return response()->json(["name"=>$request->get("name"), "status"=>false, 'link'=>""],200);
+    }
+    }
 
 
 

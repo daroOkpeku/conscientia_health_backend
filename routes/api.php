@@ -88,6 +88,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put("/responsible_party_edit", "responsible_party_edit");
         Route::post("/emergency_contact_create", "emergency_contact_create");
         Route::post("/emergency_contact_edit", "emergency_contact_edit");
+        Route::post("/personal_signed", "personal_signed");
     });
 
     Route::controller(GetController::class)->group(function(){
@@ -98,6 +99,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("/uploadPicture", "uploadPicture");
         Route::get("/responsible_party_get/{user_id}", "responsible_party_get");
         Route::get("/emergency_get/{user_id}", "emergency_get");
+        Route::post("/uploadPictureBase", "uploadPictureBase");
+        Route::get("/recentuploaddoc", "recentuploaddoc");
     });
 
     Route::controller(AuthController::class)->group(function(){

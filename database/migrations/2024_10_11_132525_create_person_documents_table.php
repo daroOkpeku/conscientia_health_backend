@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_tokens', function (Blueprint $table) {
+        Schema::create('person_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->nullable();
-            $table->string('access_token')->nullable();
-            $table->string('refresh_token')->nullable();
-            $table->string('expires_timestamp')->nullable();
+            $table->string('name')->nullable();
+            $table->string('image')->nullable();
+            $table->unsignedBigInteger("user_id");
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app_tokens');
+        Schema::dropIfExists('person_documents');
     }
 };
