@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.8",
         "mews/captcha": "^3.4",
         "socialiteproviders/manager": "^4.6",
+        "spiral/roadrunner": "^2024.2",
         "spiral/roadrunner-cli": "^2.6.0",
         "spiral/roadrunner-http": "^3.3.0"
     },

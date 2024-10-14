@@ -241,12 +241,12 @@ class GetController extends Controller
 
             }
 
-            // $cacheKey = 'token' . $checktoken->access_token;
-            // $data = Cache::remember($cacheKey, 3600, function () use ($kod) {
-            //     return $kod;
-            // });
+            $cacheKey = 'token' . $checktoken->access_token;
+            $data = Cache::remember($cacheKey, 3600, function () use ($kod) {
+                return $kod;
+            });
 
-            return response()->json(['success' => $kod]);
+            return response()->json(['success' => $data]);
         }
     }
 
@@ -284,11 +284,11 @@ class GetController extends Controller
             ->get();
 
         if ($doctors) {
-            // $cacheKey = 'doctor_' . $request->get('age') . '_' . $request->get('state');
-            // $data = Cache::remember($cacheKey, 3600, function () use ($doctors) {
-            //     return $doctors;
-            // });
-            return response()->json(["success" => $doctors], 200);
+            $cacheKey = 'doctor_' . $request->get('age') . '_' . $request->get('state');
+            $data = Cache::remember($cacheKey, 3600, function () use ($doctors) {
+                return $doctors;
+            });
+            return response()->json(["success" => $data], 200);
         } else {
             return response()->json(['error' => "We don't have any providers in the state you selected. Please call us at +877-803-5342 or email us at info@conscientiahealth.com."], 200);
         }
@@ -302,7 +302,11 @@ class GetController extends Controller
             if ($profile) {
                 $data = ProfileResource::make($profile)->resolve();
                 // $data = $profile->userdata;
-                return response()->json(["success" => $data], 200);
+                $cacheKey = 'profile_' . $profile->user_id . '_' . $profile->email;
+                $datax = Cache::remember($cacheKey, 3600, function () use ($data) {
+                    return $data;
+                });
+                return response()->json(["success" => $datax], 200);
             }
         } else {
             return response()->json(["error" => "does not exist"]);
@@ -313,7 +317,11 @@ class GetController extends Controller
     {
         $primary = Primary_insurance::where("user_id", $user_id)->first();
         if ($primary) {
-            return response()->json(["success" => $primary]);
+            $cacheKey = 'primary_' . $primary->user_id;
+            $datax = Cache::remember($cacheKey, 3600, function () use ($primary) {
+                return $primary;
+            });
+            return response()->json(["success" => $datax]);
         }
     }
 
@@ -321,7 +329,11 @@ class GetController extends Controller
     {
         $primary = Secondary_insurance::where("user_id", $user_id)->first();
         if ($primary) {
-            return response()->json(["success" => $primary]);
+            $cacheKey = 'secondary_' . $primary->user_id;
+            $datax = Cache::remember($cacheKey, 3600, function () use ($primary) {
+                return $primary;
+            });
+            return response()->json(["success" => $datax]);
         }
     }
 
@@ -329,7 +341,11 @@ class GetController extends Controller
     {
         $employer = Employer::where("user_id", $user_id)->first();
         if ($employer) {
-            return response()->json(["success" => $employer]);
+            $cacheKey = 'employer_' . $employer->user_id;
+            $datax = Cache::remember($cacheKey, 3600, function () use ($employer) {
+                return $employer;
+            });
+            return response()->json(["success" => $datax]);
         } else {
             return response()->json(["error" => "something went wrong"]);
         }
@@ -340,7 +356,11 @@ class GetController extends Controller
     {
         $responsible = Responsible_party::where("user_id", $user_id)->first();
         if ($responsible) {
-            return response()->json(["success" => $responsible]);
+            $cacheKey = 'responsible_' . $responsible->user_id;
+            $datax = Cache::remember($cacheKey, 3600, function () use ($responsible) {
+                return $responsible;
+            });
+            return response()->json(["success" => $datax]);
         } else {
             return response()->json(["error" => "something went wrong"]);
         }
@@ -351,7 +371,11 @@ class GetController extends Controller
     {
         $responsible = Emergency_contact::where("user_id", $user_id)->first();
         if ($responsible) {
-            return response()->json(["success" => $responsible]);
+            $cacheKey = 'emergency_' . $responsible->user_id;
+            $datax = Cache::remember($cacheKey, 3600, function () use ($responsible) {
+                return $responsible;
+            });
+            return response()->json(["success" => $datax]);
         } else {
             return response()->json(["error" => "something went wrong"]);
         }
@@ -1174,7 +1198,7 @@ class GetController extends Controller
 
     public function recentuploaddoc(Request $request){
         $person_document = Person_document::where([
-            'name' => $request->get("name"), 
+            'name' => $request->get("name"),
             'user_id' => $request->get("user_id")
         ])->orderBy('created_at', 'desc')->first();
      if($person_document){
