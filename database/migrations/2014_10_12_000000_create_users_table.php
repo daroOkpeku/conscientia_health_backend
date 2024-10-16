@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('captcha');
             $table->string('is_accepted')->nullable();
             $table->string('api_token')->nullable();
+            $table->boolean("is_existed_new")->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

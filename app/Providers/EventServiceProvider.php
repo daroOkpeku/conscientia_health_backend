@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\Existingpatientemail;
 use App\Events\BookingAdminEvent;
 use App\Events\BookingEvent;
 use App\Events\Contactevent;
@@ -9,6 +10,8 @@ use App\Events\ForgotPasswordEvent;
 use App\Events\patientEvent;
 use App\Events\RegisterEvent;
 use App\Events\Sentotpevent;
+use App\Events\ExistinguserEmailEvent;
+use App\Listeners\ExistinguserEmailListener;
 use App\Listeners\BookingAdminListener;
 use App\Listeners\BookingListener;
 use App\Listeners\Contactlistener;
@@ -20,6 +23,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -54,6 +58,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         patientEvent::class=>[
             patientListener::class
+        ],
+        ExistinguserEmailEvent::class=>[
+            ExistinguserEmailListener::class
         ]
     ];
 

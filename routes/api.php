@@ -39,6 +39,10 @@ Route::get("/doctor_availiable", "doctor_availiable");
 Route::get("/state_age_check", "state_age_check");
 // Route::get("/uploadPatientCreate", "uploadPatientCreate");
 // Route::get("/on_patient_upload", "on_patient_upload");
+Route::get("/user_appointment_list/{patient_id}", "user_appointment_list");
+Route::get("/upexistingpatient", "upexistingpatient");
+// Route::get("/officeinfo", "officeinfo");
+// officeinfo
 });
 // https://app.drchrono.com/api/appointments
 

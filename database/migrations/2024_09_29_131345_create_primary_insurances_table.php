@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('primary_insurances', function (Blueprint $table) {
             $table->id();
-          $table->string("photo_front")->nullable();
-          $table->string("photo_back")->nullable();
+          $table->mediumText("photo_front")->nullable();
+          $table->mediumText("photo_back")->nullable();
            $table->string("insurance_group_number")->nullable();
             $table->string("insurance_company")->nullable();
              $table->string("insurance_payer_id")->nullable();

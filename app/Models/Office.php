@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person_document extends Model
+class Office extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
-        "name",
-        "image",
-        "user_id",
-        "is_upload"
+      "drchrono_office_id",
+      "country",
+      "state",
+      "city",
+      "doctor_id",
+
     ];
+
 }

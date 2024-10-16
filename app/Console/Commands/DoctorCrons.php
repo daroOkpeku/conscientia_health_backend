@@ -45,11 +45,11 @@ class DoctorCrons extends Command
             'Authorization:Bearer RCuBUatfnxaMsDpy4X6oSSWjH5NwwU',
           ),
         ));
-        
+
         $response = curl_exec($curl);
-        
+
         curl_close($curl);
-        
+
         $data = json_decode($response, true);
         $doctors = $data['results'];
         foreach ($doctors as $doctor) {
@@ -74,9 +74,11 @@ class DoctorCrons extends Command
             'profile_picture'=>$doctor['profile_picture'],
             'is_account_suspended'=>$doctor['is_account_suspended']
            ]);
-           
+
         }
-        
+
 
     }
+
+
 }

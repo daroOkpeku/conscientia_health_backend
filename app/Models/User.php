@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'confirm_status',
         'api_token',
+        'is_existed_new',
     ];
 
 

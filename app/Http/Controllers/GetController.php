@@ -8,6 +8,7 @@ use App\Models\AppToken;
 use App\Models\Doctors;
 use App\Models\Emergency_contact;
 use App\Models\Employer;
+use App\Models\Office;
 use App\Models\Person_document;
 use App\Models\Primary_insurance;
 use App\Models\Profile;
@@ -30,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use ImageKit\ImageKit;
-
+use Illuminate\Support\Collection;
 class GetController extends Controller
 {
     public function gencaptcha()
@@ -1210,9 +1211,234 @@ class GetController extends Controller
 
 
 
+    public function user_appointment_list($patient_id){
+        if($patient_id){
+            $token = AppToken::latest()->first();
+            $client = new Client();
+            $headers = [
+                'Authorization' => 'Bearer ' . $token->access_token,
+                //'Content-Type' => 'multipart/form-data', // Correct content type for file uploads
+                'Accept' => 'application/json'
+                ];
+            $currentdate = Carbon::now();
+            $presentdate =  $currentdate->format('Y-m-d');
+            $futuredate = $currentdate->addMonth()->format('Y-m-d');
+            $res = $client->request('GET', "https://app.drchrono.com/api/appointments?patient=$patient_id&date_range=$presentdate/$futuredate", [
+                'headers' => $headers
+            ]);
+            $data = json_decode($res->getBody(), true);
+            $cacheKey = 'patient_' . $patient_id;
+            $datax = Cache::remember($cacheKey, 3600, function () use ($data) {
+                return $data;
+            });
+            return response()->json(["success"=>$datax],200);
+        }else{
+            return response()->json(["error"=>"please pass the correct "],200);
+        }
+
+    }
+
+    // upload document api on drchrono https://app.drchrono.com/api/documents
+     public function  upexistingpatient(){
+        $token = AppToken::latest()->first();
+        $client = new Client();
+            $headers = [
+                'Authorization' => 'Bearer ' . $token->access_token,
+                'Accept' => 'application/json'
+             ];
+            $res =  $client->request('GET', 'https://app.drchrono.com/api/patients?verbose=true', [
+                'headers' => $headers
+            ]);
+            $data = json_decode($res->getBody(), true);
+            $results = $data["results"];
+            foreach ($results as $result) {
+                // $result["id"];
+                // $result["chart_id"];
+                // $result["first_name"];
+                // $result["middle_name"];
+                // $result["last_name"];
+                // $result["nick_name"];
+                // $result["date_of_birth"];
+                // $result["gender"];
+                // $result["social_security_number"];
+                // $result["race"];
+                // $result["ethnicity"];
+                // $result["preferred_language"];
+                // $result["patient_photo"];
+                // $result["home_phone"];
+                // $result["cell_phone"];
+                // $result["email"];
+                // $result["address"];
+                // $result["city"];
+                // $result["state"];
+                // $result["zip_code"];
+                // $result["emergency_contact_name"];
+                // $result["emergency_contact_phone"];
+                // $result["emergency_contact_phone"];
+                // $result["emergency_contact_relation"];
+                // $result["employer"];
+                // $result["employer_address"];
+                // $result["employer_city"];
+                // $result["employer_state"];
+                // $result["employer_zip_code"];
+                // $result["doctor"];
+                // $result["primary_insurance"]["photo_front"];
+                // $result["primary_insurance"]["photo_back"];
+                // $result["secondary_insurance"]["photo_front"];
+                // $result["secondary_insurance"]["photo_back"];
+                // $result["responsible_party_name"];
+                // $result["responsible_party_relation"];
+                // $result["responsible_party_phone"];
+                // $result["responsible_party_email"];
+                // $result["patient_status"];
+                // $result["office_phone"];
+
+                // DB::transaction(function($result){
+                 $user =  User::create([
+                        'firstname'=>$result["first_name"],
+                        'lastname'=>$result["last_name"],
+                        'email'=>$result["email"],
+                        'otp'=>null,
+                        'otp_status'=>"nothing",
+                        'user_type'=>"user",
+                        'captcha'=>27,
+                        'is_accepted'=>1,
+                        'password'=>null,
+                        'confirm_status'=>1,
+                        'api_token'=>null,
+                        'is_existed_new'=>0,
+                    ]);
+
+                    Profile::create([
+                     "first_name"=>$result["first_name"],
+                    "last_name"=>$result["last_name"],
+                    "middle_name"=>$result["middle_name"],
+                    "nick_name"=>$result["nick_name"],
+                    "email"=>$result["email"],
+                    "state"=>$result["state"],
+                    "patient_photo"=>$result["patient_photo"],
+                    "date_of_birth"=>$result["date_of_birth"],
+                    "home_phone"=>$result["home_phone"],
+                    "office_phone"=>$result["office_phone"],
+                    "cell_phone"=>$result["cell_phone"],
+                    "address"=>$result["address"],
+                    "zip_code"=>$result["zip_code"],
+                    "gender"=>$result["gender"],
+                    "race"=>$result["race"],
+                    "ethnicity"=>$result["ethnicity"],
+                    "chart_id"=>$result["chart_id"],
+                    "doctor"=>$result["doctor"],
+                    "patient_status"=>$result["patient_status"],
+                    "preferred_language"=>'en',
+                    'user_id'=>$user->id,
+                    'drchrono_patient_id'=>$result["id"],
+                    "push_to_drchrono"=>1,
+                    "onpatient_push_drchrono"=>1
+                    ]);
+              
+                    Primary_insurance::create([
+                        "photo_front"=>$result["primary_insurance"]["photo_front"]??null,
+                        "photo_back"=>$result["primary_insurance"]["photo_back"]??null,
+                        "insurance_group_number"=>null,
+                         "insurance_company"=>null,
+                           "insurance_payer_id"=>null,
+                           "insurance_plan_type"=>null,
+                           "user_id"=>$user->id
+                    ]);
+
+
+                    Secondary_insurance::create([
+                        "photo_front"=>$result["secondary_insurance"]["photo_front"]??null,
+                        "photo_back"=>$result["secondary_insurance"]["photo_back"]??null,
+                        "insurance_group_number"=>null,
+                         "insurance_company"=>null,
+                           "insurance_payer_id"=>null,
+                           "insurance_plan_type"=>null,
+                           "user_id"=>$user->id
+                    ]);
+
+
+                    Responsible_party::create([
+                        "responsible_party_name"=>$result["responsible_party_name"],
+                        "responsible_party_email"=> $result["responsible_party_email"],
+                        "responsible_party_phone"=>$result["responsible_party_phone"],
+                        "responsible_party_relation"=> $result["responsible_party_relation"],
+                        "user_id"=>$user->id
+                    ]);
+
+                    Emergency_contact::create([
+                        "emergency_contact_name"=>$result["emergency_contact_name"],
+                        "emergency_contact_phone"=> $result["emergency_contact_phone"],
+                        "emergency_contact_relation"=>$result["emergency_contact_relation"],
+                        "user_id"=>$user->id
+                    ]);
+
+
+                // });
+
+
+            }
+         return response()->json(['success'=>$results]);
+     }
+
+
+    public function officeinfo(){
+
+        $token = AppToken::latest()->first();
+        $doctors = Doctors::whereNotNull("states")->get();  // This is a collection of doctors
+        $getnotnullarr = array();
+        $testarr = array();
+        foreach ($doctors as $doctor) {  // Each $doctor is an individual Doctor model
+            $decodedOnce = json_decode($doctor->states, true);
+            $client = new Client();
+            $headers = [
+                'Authorization' => 'Bearer ' . $token->access_token,
+                'Accept' => 'application/json'
+            ];
+
+            // Make the API request to get offices for the current doctor
+            $res = $client->request('GET', "https://app.drchrono.com/api/offices?doctor=$doctor->drchrono_id", [
+                'headers' => $headers
+            ]);
 
 
 
+            $data = json_decode($res->getBody(), true);
+            $results = collect($data["results"]);
+         $filterOfficeArray =   $results->each(function ($result) use ($decodedOnce, $testarr) {
+                if (is_array($result) && in_array($result['state'], $decodedOnce)) {
+                    // Instead of array_push, use shorthand
+                    return $result;
+                }
+            });
+
+
+            foreach ($filterOfficeArray as $filterOffice) {
+                $filterOffice["doctor_id"] = $doctor->id;
+                array_push($testarr, $filterOffice);
+            }
+
+            for($s = 0; $s < count($testarr); $s++){
+                 if($testarr[$s]["doctor_id"] == $doctor->id && in_array($testarr[$s]["state"], $decodedOnce)){
+                    array_push($getnotnullarr, $testarr[$s]);
+                 }
+            }
+
+        }
+
+             foreach ($getnotnullarr as $value) {
+                Office::create([
+                    "drchrono_office_id" => $value["id"],
+                    "country" => $value["country"],
+                    "state" => $value["state"],
+                    "city"=>$value["city"],
+                    "doctor_id" => $value["doctor_id"]
+                ]);
+            }
+
+
+       return response()->json(["success"=>$getnotnullarr]);
+    }
 
 
 
