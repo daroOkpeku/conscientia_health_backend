@@ -17,6 +17,7 @@ use App\Jobs\ProcessSecondary_insurance;
 use App\Jobs\ProcessSecondary_insurance_edit;
 use App\Jobs\Responsible_party_create_request;
 use App\Jobs\Responsible_party_edit_process;
+use App\Models\AppToken;
 use App\Models\Booking;
 use App\Models\Doctors;
 use App\Models\Emergency_contact;
@@ -28,6 +29,9 @@ use App\Models\Secondary_insurance;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use ImageKit\ImageKit;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Redirect;
+use GuzzleHttp\Psr7\Request as Req;
 class PostRepository implements PostRespositoryinterface
 {
 
@@ -414,6 +418,49 @@ public function personal_signed($request){
     ];
     ProcesspersonalSigned::dispatchSync($data);
     return response()->json(["success"=>"you have succesfully uploaded the document"]);
+}
+
+
+public function consent_upload($request){
+    $token = AppToken::latest()->first();
+    $client = new Client();
+$headers = [
+    'Authorization' => 'Bearer ' . $token->access_token,
+    'Accept' => 'application/json'
+];
+$options = [
+  'multipart' => [
+    [
+      'name' => 'date',
+      'contents' =>now()
+    ],
+    [
+      'name' => 'description',
+      'contents' => ''
+    ],
+    [
+      'name' => 'doctor',
+      'contents' => ''
+    ],
+    [
+        'name' => 'document',
+        'contents' => fopen($request->image, 'r') ?? "",
+        'filename' => $request->name.'.jpg'
+    ],
+    [
+      'name' => 'patient',
+      'contents' => ''
+    ],
+    [
+      'name' => 'metatags',
+      'contents' => ''
+    ]
+]];
+    $res = $client->request('POST', 'https://app.drchrono.com/api/documents', [
+        'headers' => $headers
+    ]);
+    echo $res->getBody();
+
 }
 
 }
