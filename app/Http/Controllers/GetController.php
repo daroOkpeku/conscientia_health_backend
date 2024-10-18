@@ -891,8 +891,8 @@ class GetController extends Controller
                     $response = $client->request('POST', 'https://app.drchrono.com/api/patients', [
                         'headers' => [
                             'Authorization' => 'Bearer ' . $token->access_token,
-                            //'Content-Type' => 'multipart/form-data', // Correct content type for file uploads
-                            'Accept' => 'application/json'
+                            'Content-Type' => 'multipart/form-data', // Correct content type for file uploads
+                            //'Accept' => 'application/json'
                         ],
                         'multipart' => $multipart
                     ]);
@@ -1335,7 +1335,7 @@ class GetController extends Controller
                     "push_to_drchrono"=>1,
                     "onpatient_push_drchrono"=>1
                     ]);
-              
+
                     Primary_insurance::create([
                         "photo_front"=>$result["primary_insurance"]["photo_front"]??null,
                         "photo_back"=>$result["primary_insurance"]["photo_back"]??null,
@@ -1440,6 +1440,12 @@ class GetController extends Controller
        return response()->json(["success"=>$getnotnullarr]);
     }
 
+
+    public function showjson(){
+        $root = "[{\"name\":\"CONSENT FOR USE-RELEASE AND RECEIPT OF INFORMATION\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_xEnNNakzW.pdf\"},{\"name\":\"Controlled Substance Contract\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_UIG8my8ZV.pdf\"},{\"name\":\"APPOINTMENT CANCELLATION AND NO-SHOW POLICY\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_A4IjG7Udq.pdf\"},{\"name\":\"Professional references\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_m15ZZSRJ1.pdf\"},{\"name\":\"Financial Payment Policy\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_qIWKDt9-n5.pdf\"},{\"name\":\"HIPPA  Data Use Agreement\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_Zp_vBPqQa.pdf\"},{\"name\":\"INSURANCE DEDUCTIBLE CONSENT FORM\",\"status\":true,\"link\":\"https://ik.imagekit.io/mhtpe5cvo/new-file_574per0bm.pdf\"}]";
+        $shoe = json_decode($root, true);
+        return response()->json(["success"=>$shoe],200);
+    }
 
 
 

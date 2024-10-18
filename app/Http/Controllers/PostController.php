@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Repository\Contracts\PostRespositoryinterface;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\ConsentRequest;
 use App\Http\Requests\ContactRequest;
 use App\Http\Requests\Emergency_request;
 use App\Http\Requests\Employer_create_request;
@@ -90,6 +91,10 @@ class PostController extends Controller
 
     public function personal_signed(Personal_signed_request $request){
         return $this->postmethod->personal_signed($request);
+    }
+
+    public function consent_upload(ConsentRequest $request){
+        return $this->postmethod->consent_upload($request);
     }
 
 }

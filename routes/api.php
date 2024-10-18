@@ -43,6 +43,7 @@ Route::get("/user_appointment_list/{patient_id}", "user_appointment_list");
 Route::get("/upexistingpatient", "upexistingpatient");
 // Route::get("/officeinfo", "officeinfo");
 // officeinfo
+Route::get("/showjson", "showjson");
 });
 // https://app.drchrono.com/api/appointments
 
@@ -93,6 +94,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("/emergency_contact_create", "emergency_contact_create");
         Route::post("/emergency_contact_edit", "emergency_contact_edit");
         Route::post("/personal_signed", "personal_signed");
+        Route::post("/consent_upload", "consent_upload");
     });
 
     Route::controller(GetController::class)->group(function(){
@@ -105,6 +107,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/emergency_get/{user_id}", "emergency_get");
         Route::post("/uploadPictureBase", "uploadPictureBase");
         Route::get("/recentuploaddoc", "recentuploaddoc");
+
     });
 
     Route::controller(AuthController::class)->group(function(){
