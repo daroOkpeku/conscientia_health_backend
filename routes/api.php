@@ -49,6 +49,7 @@ Route::get("/showjson", "showjson");
 
 Route::controller(AuthController::class)->group(function(){
     Route::post('/register', 'register');
+    Route::post("/adminregister", 'adminregister');
     Route::post("/login", "login");
     Route::post('/otp', 'otp');
     Route::get('/resendotp', 'resendotp')->where(['id' => '[0-9]+']);

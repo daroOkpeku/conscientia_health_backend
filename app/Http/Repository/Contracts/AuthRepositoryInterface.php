@@ -17,4 +17,5 @@ interface AuthRepositoryInterface{
     public function online_booking($request);
     public function clinic_booking($request);
     public function set_password($request);
+    public function adminregister($request);
 }

@@ -24,6 +24,9 @@ class AuthController extends Controller
      return  $this->authinterface->register($request);
     }
 
+    public function adminregister(RegisterRequest $request){
+        return $this->authinterface->adminregister($request);
+    }
 
     public function login(LoginRequest $request){
         return $this->authinterface->login($request);
