@@ -32,7 +32,9 @@ class User extends Authenticatable
         'is_existed_new',
     ];
 
-
+    public function SingleOne(){
+        return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

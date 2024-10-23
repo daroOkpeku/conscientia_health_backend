@@ -29,7 +29,8 @@ class AuthRepository implements AuthRepositoryInterface
 
     public function adminregister($request){
         $user_type = "admin";
-        AdminRegisterProcessJob::dispatchSync("stephen", "okpeku", "stephen@conscientiamd.com", "Jason007@", 1,  $user_type,  25);
+        // "stephen", "okpeku", "stephen@conscientiamd.com", "Jason007@"
+        AdminRegisterProcessJob::dispatchSync($request->firstname, $request->lastname, $request->email, $request->password, 1,  $user_type,  25);
         return response()->json(['success'=>'You have successfully registered, please check your email']);
     }
 
@@ -95,12 +96,15 @@ class AuthRepository implements AuthRepositoryInterface
 
         $emailcheck =optional(User::where('email', $request->email))->first();
 
-        if ($emailcheck->user_type != 'admin' || $emailcheck->user_type != 'customer_care'  || $emailcheck->user_type != 'super_admin' ) {
+        // if ($emailcheck->user_type != 'admin' || $emailcheck->user_type != 'customer_care'  || $emailcheck->user_type != 'super_admin' ) {
+        //     return response()->json(['error' => "you don't have access"], 200);
+        // }
+
+        if ($emailcheck->user_type != 'admin' && $emailcheck->user_type != 'customer_care' && $emailcheck->user_type != 'super_admin') {
             return response()->json(['error' => "you don't have access"], 200);
         }
 
         $credentials = $request->only('email', 'password');
-
         if ( $emailcheck &&  Auth::attempt($credentials) ) {
 
             if ($emailcheck->confirm_status != 1) {

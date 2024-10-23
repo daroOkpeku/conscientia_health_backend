@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\ForgotPasswordEvent;
 use App\Http\Repository\Contracts\AuthRepositoryInterface;
+use App\Http\Requests\AdminRequestRegister;
 use App\Http\Requests\ForgotRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\Online_booking_request;
@@ -24,7 +25,7 @@ class AuthController extends Controller
      return  $this->authinterface->register($request);
     }
 
-    public function adminregister(RegisterRequest $request){
+    public function adminregister(AdminRequestRegister $request){
         return $this->authinterface->adminregister($request);
     }
 
@@ -33,6 +34,9 @@ class AuthController extends Controller
 
     }
 
+    public function adminlogin(LoginRequest $request){
+        return $this->authinterface->adminlogin($request);
+    }
     public function otp(OTPrequest $request){
        return $this->authinterface->otp($request);
     }

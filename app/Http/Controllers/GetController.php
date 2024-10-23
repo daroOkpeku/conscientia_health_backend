@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProfileResource;
 use App\Http\Resources\ProfileResourcedata;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\UserResouresShow;
 use App\Models\AppToken;
 use App\Models\Doctors;
 use App\Models\Emergency_contact;
@@ -32,6 +34,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use ImageKit\ImageKit;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 class GetController extends Controller
 {
     public function gencaptcha()
@@ -1446,6 +1449,186 @@ class GetController extends Controller
         $shoe = json_decode($root, true);
         return response()->json(["success"=>$shoe],200);
     }
+
+
+    public function  admincount(Request $request){
+        // Correct query to count patients (where user_type is "user")
+            $patient_count = User::where('user_type', 'user')->count();
+
+            // Correct query to count staff (where user_type is not "user")
+            $staff = User::where('user_type', '!=', 'user')->count();
+
+            // Count completed profiles
+            $completed = Profile::where([
+                'push_to_drchrono' => 1,
+                'onpatient_push_drchrono' => 1
+            ])->with([
+                'primaryinsurancedata',
+                'secondaryinsurancedata',
+                'employeedata',
+                'emergencydata',
+                'responsibleparty'
+            ])->where(function ($query) {
+                // Check primary insurance data
+                $query->whereHas('primaryinsurancedata', function ($query) {
+                    $query->where('photo_front', '!=', '')
+                        ->where('photo_back', '!=', '');
+                        // ->where('insurance_group_number', '!=', '')
+                        // ->where('insurance_company', '!=', '')
+                        // ->where('insurance_payer_id', '!=', '')
+                        // ->where('insurance_plan_type', '!=', '');
+                })
+                // Or check secondary insurance data
+                ->orWhereHas('secondaryinsurancedata', function ($query) {
+                    $query->where('photo_front', '!=', '')
+                        ->where('photo_back', '!=', '');
+                        // ->where('insurance_group_number', '!=', '')
+                        // ->where('insurance_company', '!=', '')
+                        // ->where('insurance_payer_id', '!=', '')
+                        // ->where('insurance_plan_type', '!=', '');
+                });
+            })
+            // Check employee data
+            ->whereHas('employeedata', function ($query) {
+                $query->where('employer_name', '!=', '')
+                    ->where('employer_state', '!=', '')
+                    ->where('employer_city', '!=', '')
+                    ->where('employer_zip_code', '!=', '')
+                    ->where('employer_address', '!=', '');
+            })
+            // Check emergency contact data
+            ->whereHas('emergencydata', function ($query) {
+                $query->where('emergency_contact_name', '!=', '')
+                    ->where('emergency_contact_phone', '!=', '')
+                    ->where('emergency_contact_relation', '!=', '');
+            })
+            // Check responsible party data
+            ->whereHas('responsibleparty', function ($query) {
+                $query->where('responsible_party_name', '!=', '')
+                    ->where('responsible_party_email', '!=', '')
+                    ->where('responsible_party_phone', '!=', '')
+                    ->where('responsible_party_relation', '!=', '');
+            })
+            ->count();
+
+            // Calculate the date 18 years ago for the children query
+            $eighteenYearsAgo = now()->subYears(18)->format('Y-m-d');
+
+            // Correct query to count children (people under 18 years old)
+            $children = Profile::where('date_of_birth', '>', $eighteenYearsAgo)->count();
+
+            // Prepare data for response
+            $data = [
+                [
+                    'name' => "patient",
+                    'count' => $patient_count
+                ],
+                [
+                    'name' => "staff",
+                    'count' => $staff
+                ],
+                [
+                    'name' => "completed users",
+                    'count' => $completed
+                ],
+                [
+                    'name' => "children",
+                    'count' => $children
+                ]
+            ];
+            $cacheKey = 'patient_' ."Stephen";
+            $datax = Cache::remember($cacheKey, 3600, function () use ($data) {
+                return $data;
+            });
+            // Return response with the data
+            return response()->json(['success' => $datax], 200);
+
+
+    }
+
+
+
+    public function graphicdata(Request $request){
+
+        $profiles = Profile::select('created_at', 'date_of_birth', 'gender')->get();
+        $arr = [];
+
+        foreach ($profiles as $profile) {
+            // Parse the created_at field to get the month
+            $month = Carbon::parse($profile->created_at)->format("m");
+
+            // Check if the date_of_birth is set
+            if ($profile->date_of_birth) {
+                try {
+                    // Standardize the date string using DateTime and then parse with Carbon
+                    $date = new \DateTime($profile->date_of_birth);
+                    $age = Carbon::instance($date)->diffInYears(Carbon::now());
+                } catch (\Exception $e) {
+                    // Handle any parsing error, set age to 'Invalid Date'
+                    $age = 'Invalid Date';
+                }
+            } else {
+                $age = 'Unknown';
+            }
+
+            // Add the data to the array
+            $arr[] = [
+                "month" => $month,
+                "gender" => $profile->gender,
+                "age" => $age
+            ];
+        }
+
+        // Return the data as a JSON response
+        return response()->json(["success" => $arr]);
+    }
+
+
+    public function userdata($id){
+     try {
+        $user = User::find($id);
+        return $user;
+     } catch (\Throwable $th) {
+        return  "do not exist";
+     }
+    }
+
+  public function  user_data(Request $request){
+    $data = $this->userdata($request->id);
+    if(Gate::allows("check-admin", $data)){
+    $user = User::where(function($query) use($request){
+         if($request->user_type  == 'patient'){
+            $query->where('user_type', 'user');
+         }else if($request->user_type == "not patient"){
+           $query->where('user_type', '!=', 'user');
+         }else{
+
+         }
+     })->orderBy('created_at', 'desc')->limit(10)->paginate(8);
+     return  UserResouresShow::collection($user)->additional(['success'=>true]);
+    //  return response()->json(["success"=>$userdata],200);
+    }else{
+     return response()->json(["error"=>"you don't have access to this api"],200);
+    }
+  }
+
+  public function user_single_data(Request $request){
+    $data = $this->userdata($request->get('id'));
+    if(Gate::allows("check-admin", $data)){
+       $user = User::find($request->get('user_id'));
+       if($user){
+        $data = $user->SingleOne;
+        if ($data) {
+            return response()->json(["success" => $data], 200);
+        } else {
+            return response()->json(["error" => "Profile data not found"], 200);
+        }
+       }
+    }else{
+        return response()->json(["error"=>"you don't have access to this api"],200);
+
+    }
+  }
 
 
 

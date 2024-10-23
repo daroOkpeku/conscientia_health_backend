@@ -18,4 +18,5 @@ interface AuthRepositoryInterface{
     public function clinic_booking($request);
     public function set_password($request);
     public function adminregister($request);
+    public function adminlogin($request);
 }

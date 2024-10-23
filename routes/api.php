@@ -50,6 +50,7 @@ Route::get("/showjson", "showjson");
 Route::controller(AuthController::class)->group(function(){
     Route::post('/register', 'register');
     Route::post("/adminregister", 'adminregister');
+    Route::post("/adminlogin", "adminlogin");
     Route::post("/login", "login");
     Route::post('/otp', 'otp');
     Route::get('/resendotp', 'resendotp')->where(['id' => '[0-9]+']);
@@ -108,7 +109,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/emergency_get/{user_id}", "emergency_get");
         Route::post("/uploadPictureBase", "uploadPictureBase");
         Route::get("/recentuploaddoc", "recentuploaddoc");
-
+        Route::get("/admincount", "admincount");
+        Route::get("/graphicdata", "graphicdata");
+        Route::get("/user_data", "user_data");
+        Route::get("/user_single_data", "user_single_data");
     });
 
     Route::controller(AuthController::class)->group(function(){
