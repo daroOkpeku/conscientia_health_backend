@@ -3,6 +3,9 @@
 namespace App\Http\Repository;
 
 use App\Http\Repository\Contracts\PostRespositoryinterface;
+use App\Jobs\Admin_profile_Create_Process;
+use App\Jobs\CreateAdminEditProcess;
+use App\Jobs\CreateAdminProcess;
 use App\Jobs\emergency_contact_create_process;
 use App\Jobs\emergency_contact_edit_process;
 use App\Jobs\ProcessContact;
@@ -589,12 +592,12 @@ public function consent_upload($request)
 
                 // Use fopen for remote URLs
                 $documentContent = fopen($fixedUrl, 'r')??"";
-         
+
                 if (!$documentContent) {
                     return response()->json(["error" => "Unable to read file: " . $fixedUrl], 400);
                 }
 
-      
+
 
                 // Prepare the request options
                 // $options = [
@@ -620,7 +623,7 @@ public function consent_upload($request)
                 //         'contents' => $profile->drchrono_patient_id ?? ""
                 //     ],
                 // ];
-             
+
                 // // Send the request
                 // try {
                 //     Log::info('Request Options: ', $options);
@@ -645,7 +648,7 @@ public function consent_upload($request)
                 // }
 
 
-                                
+
                         $client = new Client();
                         $headers = [
                         'Accept' => 'application/json',
@@ -678,7 +681,7 @@ public function consent_upload($request)
                         ]];
                         $request = new Req('POST', 'https://app.drchrono.com/api/documents', $headers);
                         $res = $client->sendAsync($request, $options)->wait();
-                    
+
                             $updatedata = json_decode($res->getBody(), true);
                         Log::info('Sending patient data to DrChrono API: ', $updatedata);
 
@@ -721,7 +724,7 @@ public function consent_upload($request)
         // ]];
         // $request = new Req('POST', 'https://app.drchrono.com/api/documents', $headers);
         // $res = $client->sendAsync($request, $options)->wait();
-     
+
         //     $updatedata = json_decode($res->getBody(), true);
         // Log::info('Sending patient data to DrChrono API: ', $updatedata);
 
@@ -733,6 +736,54 @@ public function consent_upload($request)
     }
 }
 
+
+public function createadminuser($request){
+   CreateAdminProcess::dispatchSync(
+     $request->firstname,
+     $request->lastname,
+     $request->state,
+     $request->doctor,
+     $request->email,
+     $request->gender,
+     $request->dob,
+     $request->user_type
+   );
+   return response()->json(["success"=>"you have created a user"],200);
+}
+
+public function createadminuseredit($request){
+    CreateAdminEditProcess::dispatchSync(
+        $request->firstname,
+        $request->lastname,
+        $request->state,
+        $request->doctor,
+        $request->email,
+        $request->gender,
+        $request->dob,
+        $request->user_type,
+        $request->id,
+        $request->user_id
+    );
+    return response()->json(["success"=>"you have edited the user"],200);
+
+}
+
+
+public function admin_profile_create($request){
+    $data = [
+        "first_name"=>$request->first_name,
+        "last_name"=>$request->last_name,
+        "email"=>$request->email,
+        "state"=>$request->state,
+        "home_phone"=>$request->home_phone,
+        "office_phone"=>$request->office_phone,
+        "cell_phone"=>$request->cell_phone,
+        "gender"=>$request->gender,
+        "id"=>$request->id
+    ];
+   Admin_profile_Create_Process::dispatchSync($data);
+   return response()->json(["success"=>"Updated Successfully"],200);
+}
 
 
 public function testcheck(){

@@ -97,6 +97,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("/emergency_contact_edit", "emergency_contact_edit");
         Route::post("/personal_signed", "personal_signed");
         Route::post("/consent_upload", "consent_upload");
+        Route::post("/createadminuser", "createadminuser");
+        Route::post("/createadminuseredit", "createadminuseredit");
+        Route::post("/admin_profile_create", "admin_profile_create");
     });
 
     Route::controller(GetController::class)->group(function(){

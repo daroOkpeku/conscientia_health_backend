@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repository\Contracts\PostRespositoryinterface;
+use App\Http\Requests\Admin_profile_Create_Request;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ConsentRequest;
 use App\Http\Requests\ContactRequest;
+use App\Http\Requests\CreateAdminRequest;
 use App\Http\Requests\Emergency_request;
 use App\Http\Requests\Employer_create_request;
 use App\Http\Requests\Personal_signed_request;
@@ -17,6 +19,9 @@ use App\Models\Emergency_contact;
 use App\Models\Primary_insurance;
 use Illuminate\Http\Request;
 use App\Models\Profile;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
+
 class PostController extends Controller
 {
     public $postmethod;
@@ -24,6 +29,16 @@ class PostController extends Controller
     {
         $this->postmethod = $postinterface;
     }
+
+    public function userdata($id){
+        try {
+           $user = User::find($id);
+           return $user;
+        } catch (\Throwable $th) {
+           return  "do not exist";
+        }
+       }
+
 
 
     public function contact(ContactRequest $request){
@@ -95,6 +110,33 @@ class PostController extends Controller
 
     public function consent_upload(ConsentRequest $request){
         return $this->postmethod->consent_upload($request);
+    }
+
+    public function createadminuser(CreateAdminRequest $request){
+        $data = $this->userdata($request->id);
+        if(Gate::allows("check-admin", $data)){
+        return $this->postmethod->createadminuser($request);
+        }else{
+            return response()->json(["error"=>"you don't have access to this api"],200);
+        }
+    }
+
+    public function createadminuseredit(CreateAdminRequest $request){
+        $data = $this->userdata($request->id);
+        if(Gate::allows("check-admin", $data)){
+        return $this->postmethod->createadminuseredit($request);
+        }else{
+            return response()->json(["error"=>"you don't have access to this api"],200);
+        }
+    }
+
+    public function admin_profile_create(Admin_profile_Create_Request $request){
+        $data = $this->userdata($request->id);
+        if(Gate::allows("check-admin", $data)){
+            return $this->postmethod->admin_profile_create($request);
+        }else{
+            return response()->json(["error"=>"you don't have access to this api"],200);
+        }
     }
 
 }

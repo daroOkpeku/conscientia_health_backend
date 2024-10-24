@@ -23,4 +23,7 @@ public function emergency_contact_create($request);
 public function emergency_contact_edit($request);
 public function personal_signed($request);
 public function consent_upload($request);
+public function createadminuser($request);
+public function createadminuseredit($request);
+public function admin_profile_create($request);
 }
