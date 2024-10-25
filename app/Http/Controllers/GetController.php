@@ -7,6 +7,7 @@ use App\Http\Resources\ProfileResourcedata;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserResouresShow;
 use App\Models\AppToken;
+use App\Models\Chat;
 use App\Models\Doctors;
 use App\Models\Emergency_contact;
 use App\Models\Employer;
@@ -1722,6 +1723,25 @@ class GetController extends Controller
         return response()->json(["error"=>"you don't have access to this api"],200);
 
     }
+  }
+
+  public function get_message(Request $request){
+  
+    $chat = Chat::where(function($query) use ($request) {
+        $query->where('sender_id', $request->sender_id)
+              ->where('receiver_id', $request->receiver_id);
+    })
+    ->orWhere(function($query) use ($request) {
+        $query->where('sender_id', $request->receiver_id)
+              ->where('receiver_id', $request->sender_id);
+    })
+    ->get();
+
+if ($chat->isEmpty()) {
+    return response()->json(['error' =>'No chat history found'], 200);
+}
+
+return response()->json(['success' =>$chat], 200);
   }
 
 

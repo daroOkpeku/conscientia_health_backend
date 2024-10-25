@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository;
 
+use App\Events\SendMessageEvent;
 use App\Http\Repository\Contracts\PostRespositoryinterface;
 use App\Jobs\Admin_profile_Create_Process;
 use App\Jobs\CreateAdminEditProcess;
@@ -783,6 +784,12 @@ public function admin_profile_create($request){
     ];
    Admin_profile_Create_Process::dispatchSync($data);
    return response()->json(["success"=>"Updated Successfully"],200);
+}
+
+
+public function send_message($request){
+    
+    SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message);
 }
 
 

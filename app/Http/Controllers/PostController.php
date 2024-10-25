@@ -139,4 +139,14 @@ class PostController extends Controller
         }
     }
 
+
+    public function send_message(Request $request){
+        $data = $this->userdata($request->id);
+        if(Gate::allows("check-admin", $data)){
+          return $this->postmethod->send_message($request);
+        }else{
+            return response()->json(["error"=>"you don't have access to this api"],200);
+        } 
+    }
+
 }
