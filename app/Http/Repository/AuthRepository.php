@@ -18,6 +18,7 @@ use App\Jobs\ProcessSecondBooking;
 use App\Jobs\ProcessSecondClinicBooking;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
+
 class AuthRepository implements AuthRepositoryInterface
 {
 
@@ -55,7 +56,7 @@ class AuthRepository implements AuthRepositoryInterface
 
     $credentials = $request->only('email', 'password');
 
-    if ( $emailcheck &&  Auth::attempt($credentials) ) {
+    if (Hash::check($request->password, $emailcheck->password)) {
 
         if ($emailcheck->confirm_status != 1) {
             return response()->json(['error' => "Your email is not confirmed."], 403);
@@ -92,54 +93,106 @@ class AuthRepository implements AuthRepositoryInterface
     }
 
 
-    public function adminlogin($request){
+    // public function adminlogin($request){
 
-        $emailcheck =optional(User::where('email', $request->email))->first();
+    //     $emailcheck = User::where('email', $request->email)->first();
 
-        // if ($emailcheck->user_type != 'admin' || $emailcheck->user_type != 'customer_care'  || $emailcheck->user_type != 'super_admin' ) {
-        //     return response()->json(['error' => "you don't have access"], 200);
-        // }
+    //     if (Hash::check($request->password, $emailcheck->password)) {
 
-        if ($emailcheck->user_type != 'admin' && $emailcheck->user_type != 'customer_care' && $emailcheck->user_type != 'super_admin') {
-            return response()->json(['error' => "you don't have access"], 200);
-        }
+    //         if ($emailcheck->confirm_status == 0) {
+    //             return response()->json(['error' => "Your email is not confirmed."], 200);
+    //         }
 
-        $credentials = $request->only('email', 'password');
-        if ( $emailcheck &&  Auth::attempt($credentials) ) {
+    //         if ($emailcheck->user_type == 'user') {
+    //             return response()->json(['error' => "you don't have access"], 200);
+    //         }
 
-            if ($emailcheck->confirm_status != 1) {
-                return response()->json(['error' => "Your email is not confirmed."], 200);
-            }
+    //         $token = $emailcheck->createToken('auth-token')->plainTextToken;
+    //         $otp = $this->generateotpcode();
+    //         $emailcheck->update([
+    //             'api_token' => $token,
+    //             'otp' => $otp,
+    //             'otp_status' => 'active',
+    //         ]);
 
-            $token = $emailcheck->createToken('auth-token')->plainTextToken;
-            $otp = $this->generateotpcode();
-            $emailcheck->update([
-                'api_token' => $token,
-                'otp' => $otp,
-                'otp_status' => 'active',
-            ]);
+    //         $data = [
+    //             'token' => $token,
+    //             'email' => $emailcheck->email,
+    //             'role' => $emailcheck->user_type,
+    //             'firstname'=>$emailcheck->firstname,
+    //             'lastname'=>$emailcheck->lastname,
+    //             'id' => $emailcheck->id,
+    //             'otp'=>$emailcheck->otp,
+    //             'otp_status'=>$emailcheck->otp_status,
+    //         ];
+    //         // Sentotpevent::dispatch($otp, $emailcheck->email);
+    //         return response()->json([
+    //             'success' => $data,
+    //             'message' => 'Your have logged in successfully'
+    //         ], 200);
 
-            $data = [
-                'token' => $token,
-                'email' => $emailcheck->email,
-                'role' => $emailcheck->user_type,
-                'firstname'=>$emailcheck->firstname,
-                'lastname'=>$emailcheck->lastname,
-                'id' => $emailcheck->id,
-                'otp'=>$emailcheck->otp,
-                'otp_status'=>$emailcheck->otp_status,
-            ];
-            // Sentotpevent::dispatch($otp, $emailcheck->email);
-            return response()->json([
-                'success' => $data,
-                'message' => 'Your have logged in successfully'
-            ], 200);
+    //     }else{
+    //         return response()->json(['error' => "Your email is not confirmed."], 200);
 
-        }else{
-            return response()->json(['error' => "Your email is not confirmed."], 200);
+    //     }
+    // }
 
-        }
+
+    public function adminlogin($request)
+{
+    // Find the user by email
+    $emailcheck = User::where('email', $request->email)->first();
+
+    // Check if user exists
+    if (!$emailcheck) {
+        return response()->json(['error' => "User not found."], 200);
     }
+
+    // Verify the password
+    if (!Hash::check($request->password, $emailcheck->password)) {
+        return response()->json(['error' => "Invalid credentials."], 200);
+    }
+
+    // Check if email is confirmed
+    if ($emailcheck->confirm_status == 0) {
+        return response()->json(['error' => "Your email is not confirmed."], 200);
+    }
+
+    // Check if the user has the required access level
+    if ($emailcheck->user_type == 'user') {
+        return response()->json(['error' => "You don't have access."], 200);
+    }
+
+    // Generate token and OTP, update the user's data
+    $token = $emailcheck->createToken('auth-token')->plainTextToken;
+    $otp = $this->generateotpcode();
+    $emailcheck->update([
+        'api_token' => $token,
+        'otp' => $otp,
+        'otp_status' => 'active',
+    ]);
+
+    // Prepare response data
+    $data = [
+        'token' => $token,
+        'email' => $emailcheck->email,
+        'role' => $emailcheck->user_type,
+        'firstname' => $emailcheck->firstname,
+        'lastname' => $emailcheck->lastname,
+        'id' => $emailcheck->id,
+        'otp' => $emailcheck->otp,
+        'otp_status' => $emailcheck->otp_status,
+    ];
+
+    // Optional: Dispatch OTP event if needed
+    // Sentotpevent::dispatch($otp, $emailcheck->email);
+
+    return response()->json([
+        'success' => $data,
+        'message' => 'You have logged in successfully.'
+    ], 200);
+}
+
 
 
 
