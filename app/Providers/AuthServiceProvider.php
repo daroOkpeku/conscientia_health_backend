@@ -30,5 +30,14 @@ class AuthServiceProvider extends ServiceProvider
                return false;
             }
        });
+
+
+       Gate::define("check-user", function($user){
+        if($user->user_type == "user"){
+         return true;
+        }else{
+           return false;
+        }
+   });
     }
 }

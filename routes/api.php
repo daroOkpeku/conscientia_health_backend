@@ -100,6 +100,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("/createadminuser", "createadminuser");
         Route::post("/createadminuseredit", "createadminuseredit");
         Route::post("/admin_profile_create", "admin_profile_create");
+        Route::post("/admin_send_message", "send_message");
+        Route::post("/user_send_message", "user_send_message");
+        Route::post("/updateTypingStatus", "updateTypingStatus");
     });
 
     Route::controller(GetController::class)->group(function(){
@@ -116,6 +119,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/graphicdata", "graphicdata");
         Route::get("/user_data", "user_data");
         Route::get("/user_single_data", "user_single_data");
+        Route::get("/get_user_list", "get_user_list");
+        Route::get("/get_customer_list", "get_customer_list");
     });
 
     Route::controller(AuthController::class)->group(function(){

@@ -21,3 +21,13 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('chat.{receiver_id}', function ($user, $receiver_id){
     return (int) $user->id === (int)$receiver_id;
 });
+
+Broadcast::channel('chat_presence', function($user){
+return ["id"=>$user->id, "name"=>$user->name];
+});
+
+
+Broadcast::channel('typing.{otheruserId}', function ($user, $otheruserId) {
+    // Assuming your chat identifier is unique to the two users
+    return (int) $user->id === (int)$otheruserId;
+});

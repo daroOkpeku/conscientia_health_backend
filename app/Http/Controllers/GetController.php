@@ -1726,7 +1726,7 @@ class GetController extends Controller
   }
 
   public function get_message(Request $request){
-  
+
     $chat = Chat::where(function($query) use ($request) {
         $query->where('sender_id', $request->sender_id)
               ->where('receiver_id', $request->receiver_id);
@@ -1742,7 +1742,19 @@ if ($chat->isEmpty()) {
 }
 
 return response()->json(['success' =>$chat], 200);
-  }
+}
+
+public function get_user_list(){
+   $user = User::where(["user_type"=>'user'])->get();
+   return response()->json(["success"=>$user]);
+}
+
+public function get_customer_list(){
+    $user = User::where(["user_type"=>'customer_care'])->get();
+    return response()->json(["success"=>$user]);
+}
+
+
 
 
 

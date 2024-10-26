@@ -14,6 +14,7 @@ use App\Http\Requests\Personal_signed_request;
 use App\Http\Requests\PrimaryRequest;
 use App\Http\Requests\ProfileCreateRequest;
 use App\Http\Requests\Responsible_Party_Create_request;
+use App\Http\Requests\SendMessageRequest;
 use App\Http\Requests\UploadRequest;
 use App\Models\Emergency_contact;
 use App\Models\Primary_insurance;
@@ -140,13 +141,27 @@ class PostController extends Controller
     }
 
 
-    public function send_message(Request $request){
+    public function send_message(SendMessageRequest $request){
         $data = $this->userdata($request->id);
         if(Gate::allows("check-admin", $data)){
           return $this->postmethod->send_message($request);
         }else{
             return response()->json(["error"=>"you don't have access to this api"],200);
-        } 
+        }
+    }
+
+
+    public function user_send_message(SendMessageRequest $request){
+        $data = $this->userdata($request->id);
+        if(Gate::allows("check-admin", $data)){
+        return $this->postmethod->send_message($request);
+        }else{
+            return response()->json(["error"=>"you don't have access to this api"],200);
+        }
+    }
+
+    public function updateTypingStatus(Request $request){
+        return $this->postmethod->updateTypingStatus($request);
     }
 
 }

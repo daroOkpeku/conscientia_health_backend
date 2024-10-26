@@ -27,4 +27,5 @@ public function createadminuser($request);
 public function createadminuseredit($request);
 public function admin_profile_create($request);
 public function send_message($request);
+public function updateTypingStatus($request);
 }
