@@ -13,17 +13,17 @@ use Illuminate\Queue\SerializesModels;
 class UserTyping  implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $otheruserId;
-    public $chatId;
-    public $isTyping;
+    // public $otheruserId;
+    // public $chatId;
+    // public $isTyping;
+    // public $userId;
+    public $data;
     /**
      * Create a new event instance.
      */
-    public function __construct($otheruserId, $chatId, $isTyping)
+    public function __construct($data)
     {
-        $this->otheruserId = $otheruserId;
-        $this->chatId = $chatId;
-        $this->isTyping = $isTyping;
+    $this->data = $data;
     }
 
     /**
@@ -34,7 +34,7 @@ class UserTyping  implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('typing.' . $this->otheruserId),
+            new PresenceChannel('typing.' . $this->data["otheruserId"]),
         ];
     }
 }

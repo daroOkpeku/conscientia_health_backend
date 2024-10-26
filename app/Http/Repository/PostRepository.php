@@ -789,20 +789,22 @@ public function admin_profile_create($request){
 
 
 public function send_message($request){
-    
+
     SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message);
 }
 
 
 public function updateTypingStatus($request)
 {
-    $otheruserId = $request->otheruserid;
-    $chatId = $request->chat_id;
-    $isTyping = $request->is_typing;
 
+    $data = [
+        "otheruserId" => $request->otheruserid,
+        "chatId" => $request->chat_id,
+        "isTyping" => $request->is_typing,
+        "userId" => $request->id,
+    ];
     // // Broadcast the typing event
-    broadcast(new UserTyping($otheruserId, $chatId, $isTyping))->toOthers();
-
+    broadcast(new UserTyping($data))->toOthers();
      return response()->json(['status' => 'Typing status updated']);
 }
 
