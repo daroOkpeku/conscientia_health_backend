@@ -20,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('sender_id');
             $table->bigInteger('receiver_id');
             $table->longText("message");
+            $table->string("chat_id")->nullable();
             $table->timestamps();
         });
     }

@@ -33,7 +33,7 @@ class SendMessageEvent implements ShouldBroadcast
                 "receiver_id"=>$receiver_id,
                 "message"=>$message,
                 "chat_id"=>$chat->chat_id
-            ]); 
+            ]);
         }else{
             Chat::create([
                 "sender_id"=>$sender_id,
@@ -51,11 +51,14 @@ class SendMessageEvent implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
+
         return [
-            new PrivateChannel('chat.'.$this->receiver_id),
+            new PrivateChannel('chat.' . $this->sender_id),
+             new PrivateChannel('chat.' . $this->receiver_id),
         ];
+
     }
 
     public function broadcastAs(){

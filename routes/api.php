@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DrChronoWebhookController;
 use App\Http\Controllers\GetController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Broadcast;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,10 +24,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Broadcast::routes([
+    'middleware' => [
+        'auth:sanctum'
+    ]
+]);
 
 // gencaptcha
 
-
+// Broadcast::routes(['middleware' => 'auth:sanctum']);
 Route::controller(GetController::class)->group(function(){
 Route::get('/gencaptcha', 'gencaptcha');
 Route::get('/verify_email', 'verify_email')->where(['email' => '.*', 'firstname' => '[A-Za-z]+']);
@@ -45,6 +51,11 @@ Route::get("/upexistingpatient", "upexistingpatient");
 // officeinfo
 Route::get("/showjson", "showjson");
 });
+
+Route::controller(ChatController::class)->group(function(){
+    Route::get("/geoip/{ip}", "geoip");
+});
+
 // https://app.drchrono.com/api/appointments
 
 Route::controller(AuthController::class)->group(function(){
@@ -75,8 +86,11 @@ Route::controller(PostController::class)->group(function(){
 
 });
 
-// profiles
-
+// // profiles
+// Route::post('/broadcasting/auth', function (Request $request) {
+//     // Authenticated user will be handled here by Sanctum
+//     return Broadcast::auth($request);
+// });
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -119,9 +133,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/graphicdata", "graphicdata");
         Route::get("/user_data", "user_data");
         Route::get("/user_single_data", "user_single_data");
-        Route::get("/get_user_list", "get_user_list");
-        Route::get("/get_customer_list", "get_customer_list");
+        //Route::get("get_user_list", "get_user_list");
+        //Route::get("/get_customer_list", "get_customer_list");
+        Route::get("/get_message", "get_message");
+        Route::get("testdrive", "testdrive");
     });
+    // Route::get("userlist", [ChatController::class, "userlist"]);
+
+    // Route::controller(ChatController::class)->group(function(){
+    //   Route::get("userlist", "userlist");
+    //     Route::get("/get_customer_list", "get_customer_list");
+    // });
+
+    Route::controller(ChatController::class)->group(function(){
+        Route::get("userlist", "userlist");
+          Route::get("/get_customer_list", "get_customer_list");
+      });
 
     Route::controller(AuthController::class)->group(function(){
        Route::get("/logout", "logout");

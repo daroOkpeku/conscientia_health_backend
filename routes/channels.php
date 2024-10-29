@@ -22,8 +22,8 @@ Broadcast::channel('chat.{receiver_id}', function ($user, $receiver_id){
     return (int) $user->id === (int)$receiver_id;
 });
 
-Broadcast::channel('chat_presence', function($user){
-return ["id"=>$user->id, "name"=>$user->name];
+Broadcast::channel('user', function($user){
+     return ['id' => $user->id, 'firstname'=>$user->firstname, 'lastname'=>$user->lastname, "user_type"=>$user->user_type];
 });
 
 

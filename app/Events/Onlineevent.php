@@ -31,11 +31,11 @@ class Onlineevent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('chat_presence'),
+            new PresenceChannel('user'),
         ];
     }
 
-    public function broadcastAs(){
-        return 'chat_presence';
-      }
+    // public function broadcastAs(){
+    //     return 'user';
+    //   }
 }

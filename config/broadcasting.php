@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('BROADCAST_DRIVER', 'null'),
+    'default' => env('BROADCAST_DRIVER', 'reverb'),
 
     /*
     |--------------------------------------------------------------------------
@@ -30,21 +30,34 @@ return [
 
     'connections' => [
 
-        'reverb' => [
-            'driver' => 'reverb',
-            'key' => env('REVERB_APP_KEY'),
-            'secret' => env('REVERB_APP_SECRET'),
-            'app_id' => env('REVERB_APP_ID'),
-            'options' => [
-                'host' => env('REVERB_HOST'),
-                'port' => env('REVERB_PORT', 443),
-                'scheme' => env('REVERB_SCHEME', 'https'),
-                'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
-            ],
-            'client_options' => [
-                // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
-            ],
-        ],
+        // 'reverb' => [
+        //     'driver' => 'reverb',
+        //     'key' => env('REVERB_APP_KEY'),
+        //     'secret' => env('REVERB_APP_SECRET'),
+        //     'app_id' => env('REVERB_APP_ID'),
+        //     'options' => [
+        //         'host' => env('REVERB_HOST'),
+        //         'port' => env('REVERB_PORT', 443),
+        //         'scheme' => env('REVERB_SCHEME', 'https'),
+        //         'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
+        //     ],
+        //     'client_options' => [
+        //         // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
+        //     ],
+        // ],
+
+        // 'reverb' => [
+        //     'driver' => 'pusher',
+        //     'key' => env('REVERB_APP_KEY', 'zq5uu9d5jnp1xmvrvx1y'),
+        //     'secret' => env('REVERB_APP_SECRET', 'your-secret'),
+        //     'app_id' => env('REVERB_APP_ID', 'your-app-id'),
+        //     'options' => [
+        //         'host' => 'localhost:3000',
+        //         'port' => 9000,
+        //         'scheme' => 'http',
+        //         'encrypted' => false,
+        //     ],
+        // ],
 
         'pusher' => [
             'driver' => 'pusher',
@@ -62,6 +75,20 @@ return [
                 // Guzzle client options: https://docs.guzzlephp.org/en/stable/request-options.html
             ],
         ],
+
+
+    //     'pusher' => [
+    // 'driver' => 'pusher',
+    // 'key' => env('REVERB_APP_KEY'),
+    // 'secret' => env('REVERB_APP_SECRET'),
+    // 'app_id' => env('REVERB_APP_ID'),
+    //     'options' => [
+    //         'host' => env('REVERB_HOST', 'localhost'),
+    //         'port' => env('REVERB_PORT', 8080),
+    //         'scheme' => env('REVERB_SCHEME', 'http'),
+    //         'encrypted' => false, // Reverb typically doesn't use encryption by default
+    //     ],
+    // ],
 
         'ably' => [
             'driver' => 'ably',

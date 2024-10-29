@@ -70,7 +70,7 @@ class GetController extends Controller
         $clientId = env('DRCHRONO_CLIENT_ID');
         // 'patients:summary:read patients:summary:write calendar:read calendar:write clinical:read clinical:write'
         $scopes = 'labs:read labs:write messages:read messages:write patients:read patients:write patients:summary:read patients:summary:write settings:read settings:write tasks:read tasks:write user:read user:write billing:patient-payment:read billing:patient-payment:write billing:read billing:write calendar:read calendar:write clinical:read clinical:write'; // Example: 'clinical:read patients:read'
-
+        AppToken::truncate();
         // used this api to get code to generate access_token and refresh_token
         $redirectUriEncoded = urlencode($redirectUri);
         $clientIdEncoded = urlencode($clientId);
@@ -1689,12 +1689,12 @@ class GetController extends Controller
     }
 
   public function  user_data(Request $request){
-    $data = $this->userdata($request->id);
-    if(Gate::allows("check-admin", $data)){
+
+    if(Gate::allows("check-admin", auth()->user())){
     $user = User::where(function($query) use($request){
-         if($request->user_type  == 'patient'){
+         if($request->get("user_type")  == 'patient'){
             $query->where('user_type', 'user');
-         }else if($request->user_type == "not patient"){
+         }else if($request->get("user_type") == "not patient"){
            $query->where('user_type', '!=', 'user');
          }else{
 
@@ -1728,12 +1728,12 @@ class GetController extends Controller
   public function get_message(Request $request){
 
     $chat = Chat::where(function($query) use ($request) {
-        $query->where('sender_id', $request->sender_id)
-              ->where('receiver_id', $request->receiver_id);
+        $query->where('sender_id', $request->get("sender_id"))
+              ->where('receiver_id', $request->get("receiver_id"));
     })
     ->orWhere(function($query) use ($request) {
-        $query->where('sender_id', $request->receiver_id)
-              ->where('receiver_id', $request->sender_id);
+        $query->where('sender_id', $request->get("receiver_id"))
+              ->where('receiver_id', $request->get("sender_id"));
     })
     ->get();
 
@@ -1744,15 +1744,11 @@ if ($chat->isEmpty()) {
 return response()->json(['success' =>$chat], 200);
 }
 
-public function get_user_list(){
-   $user = User::where(["user_type"=>'user'])->get();
-   return response()->json(["success"=>$user]);
+
+public function testdrive(){
+    return response()->json([auth()->user()]);
 }
 
-public function get_customer_list(){
-    $user = User::where(["user_type"=>'customer_care'])->get();
-    return response()->json(["success"=>$user]);
-}
 
 
 

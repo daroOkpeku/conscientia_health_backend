@@ -791,6 +791,7 @@ public function admin_profile_create($request){
 public function send_message($request){
 
     SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message);
+    return response()->json(["success"=>"successful"],200);
 }
 
 
@@ -798,7 +799,7 @@ public function updateTypingStatus($request)
 {
 
     $data = [
-        "otheruserId" => $request->otheruserid,
+        "otheruserId" =>$request->otheruserid,
         "chatId" => $request->chat_id,
         "isTyping" => $request->is_typing,
         "userId" => $request->id,

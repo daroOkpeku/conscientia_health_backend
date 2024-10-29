@@ -23,7 +23,7 @@ class SendMessageRequest extends FormRequest
     {
 
         return [
-            "id"=>"required|integer",
+           // "id"=>"required|integer",
             "sender_id"=>"required|integer",
             "receiver_id"=>"required|integer",
             "message"=>"required|string"
