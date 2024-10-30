@@ -50,6 +50,7 @@ Route::get("/upexistingpatient", "upexistingpatient");
 // Route::get("/officeinfo", "officeinfo");
 // officeinfo
 Route::get("/showjson", "showjson");
+Route::get("/doctorsingle", "doctorsingle");
 });
 
 Route::controller(ChatController::class)->group(function(){

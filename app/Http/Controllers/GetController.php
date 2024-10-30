@@ -1745,6 +1745,15 @@ return response()->json(['success' =>$chat], 200);
 }
 
 
+public function doctorsingle(Request $request)
+{
+  $doctors = Doctors::where('first_name', $request->get("firstaname"))->first();
+  if($doctors){
+    return response()->json(["success"=>$doctors],200);
+  }else{
+    return response()->json(["error"=>"empty"],200);
+  }
+}
 public function testdrive(){
     return response()->json([auth()->user()]);
 }
