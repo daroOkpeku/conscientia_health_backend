@@ -25,7 +25,7 @@ class CreateAdminRequest extends FormRequest
             "firstname"=>"required|string",
             "lastname"=>"required|string",
             "state"=>"required|string",
-            "doctor"=>"required|string",
+            "doctor"=>"string|nullable",
             "email"=>"required|email",
             "gender"=>"required|string",
             "dob"=>"required|string",

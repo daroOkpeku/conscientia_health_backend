@@ -25,7 +25,7 @@ class Admin_profile_Create_Request extends FormRequest
             "first_name"=>"required|string",
             "last_name"=>"required|string",
             "email"=>"required|email",
-            "state"=>"required|regex:/^[a-zA-Z0-9+\-._(): ]+$/",
+            "state"=>"regex:/^[a-zA-Z0-9+\-._(): ]+$/|nullable",
             "home_phone"=>"required|string",
             "office_phone"=>"required|string",
             "cell_phone"=>"required|string",
