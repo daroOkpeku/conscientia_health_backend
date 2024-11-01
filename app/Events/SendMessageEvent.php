@@ -14,9 +14,10 @@ use Illuminate\Queue\SerializesModels;
 class SendMessageEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-     public $sender_id;
-     public $receiver_id;
-     public $message;
+     private $sender_id;
+     private $receiver_id;
+     private $message;
+     public $chat_last;
     /**
      * Create a new event instance.
      */
@@ -28,14 +29,14 @@ class SendMessageEvent implements ShouldBroadcast
         $randnum = rand(00000, 99999);
         $chat = Chat::where(['sender_id'=>$sender_id, "receiver_id"=>$receiver_id])->first();
         if($chat){
-            Chat::create([
+           $this->chat_last = Chat::create([
                 "sender_id"=>$sender_id,
                 "receiver_id"=>$receiver_id,
                 "message"=>$message,
                 "chat_id"=>$chat->chat_id
             ]);
         }else{
-            Chat::create([
+            $this->chat_last =  Chat::create([
                 "sender_id"=>$sender_id,
                 "receiver_id"=>$receiver_id,
                 "message"=>$message,
