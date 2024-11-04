@@ -1549,60 +1549,53 @@ class GetController extends Controller
         // Correct query to count staff (where user_type is not "user")
         $staff = User::where('user_type', '!=', 'user')->count();
 
-        // Count completed profiles
         $completed = Profile::where([
             'push_to_drchrono' => 1,
-            'onpatient_push_drchrono' => 1
+            'onpatient_push_drchrono' => 1,
         ])
-        ->with([
-            'primaryinsurancedata',
-            'secondaryinsurancedata',
-            'employeedata',
-            'emergencydata',
-            'responsibleparty'
-        ])
-        ->where(function ($query) {
-            // Check primary insurance data
-            $query->whereHas('primaryinsurancedata', function ($query) {
-                $query->where('photo_front', '!=', '')
-                    ->where('photo_back', '!=', '');
-                    // Additional fields can be added here
-            })
-            // Or check secondary insurance data
-            ->orWhereHas('secondaryinsurancedata', function ($query) {
-                $query->where('photo_front', '!=', '')
-                    ->where('photo_back', '!=', '');
-                    // Additional fields can be added here
-            });
-        })
-        // Check employee data
-        ->whereHas('employeedata', function ($query) {
-            $query->where('employer_name', '!=', '')
-                ->where('employer_state', '!=', '')
-                ->where('employer_city', '!=', '')
-                ->where('employer_zip_code', '!=', '')
-                ->where('employer_address', '!=', '');
-        })
-        // Check emergency contact data
-        ->whereHas('emergencydata', function ($query) {
-            $query->where('emergency_contact_name', '!=', '')
-                ->where('emergency_contact_phone', '!=', '')
-                ->where('emergency_contact_relation', '!=', '');
-        })
-        // Check responsible party data
-        ->whereHas('responsibleparty', function ($query) {
-            $query->where('responsible_party_name', '!=', '')
-                ->where('responsible_party_email', '!=', '')
-                ->where('responsible_party_phone', '!=', '')
-                ->where('responsible_party_relation', '!=', '');
-        })
+        // ->where(function ($query) {
+        //     // Check primary insurance data
+        //     $query->whereHas('primaryinsurancedata', function ($query) {
+        //         $query->where('photo_front', '!=', '')
+        //             ->where('photo_back', '!=', '');
+        //             // Additional fields can be added here
+        //     })
+        //     // Or check secondary insurance data
+        //     ->orWhereHas('secondaryinsurancedata', function ($query) {
+        //         $query->where('photo_front', '!=', '')
+        //             ->where('photo_back', '!=', '');
+        //             // Additional fields can be added here
+        //     });
+        // })
+        // // Check employee data
+        // ->whereHas('employeedata', function ($query) {
+        //     $query->where('employer_name', '!=', '')
+        //         ->where('employer_state', '!=', '')
+        //         ->where('employer_city', '!=', '')
+        //         ->where('employer_zip_code', '!=', '')
+        //         ->where('employer_address', '!=', '');
+        // })
+        // // Check emergency contact data
+        // ->whereHas('emergencydata', function ($query) {
+        //     $query->where('emergency_contact_name', '!=', '')
+        //         ->where('emergency_contact_phone', '!=', '')
+        //         ->where('emergency_contact_relation', '!=', '');
+        // })
+        // // Check responsible party data
+        // ->whereHas('responsibleparty', function ($query) {
+        //     $query->where('responsible_party_name', '!=', '')
+        //         ->where('responsible_party_email', '!=', '')
+        //         ->where('responsible_party_phone', '!=', '')
+        //         ->where('responsible_party_relation', '!=', '');
+        // })
         ->count();
+
 
         // Calculate the date 18 years ago for the children query
         $eighteenYearsAgo = now()->subYears(18)->format('Y-m-d');
 
         // Correct query to count children (people under 18 years old)
-        $children = Profile::where('date_of_birth', '>', $eighteenYearsAgo)->count();
+        $children = Profile::whereDate('date_of_birth', '>', $eighteenYearsAgo)->count();
 
         // Prepare data for response
         $data = [
