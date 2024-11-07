@@ -31,10 +31,12 @@ class UserTyping  implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [
-            new PresenceChannel('typing.'.$this->data["otheruserId"]),
-        ];
+        return new PrivateChannel('typing.'.$this->data["otheruserId"]);
+    }
+
+    public function broadcastAs(){
+    return 'UserTyping';
     }
 }

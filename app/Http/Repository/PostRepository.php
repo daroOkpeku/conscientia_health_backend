@@ -800,12 +800,12 @@ public function updateTypingStatus($request)
 
     $data = [
         "otheruserId" =>$request->otheruserid,
-        "chatId" => $request->chat_id,
+        // "chatId" => $request->chat_id,
         "isTyping" => $request->is_typing,
         "userId" => $request->id,
     ];
     // // Broadcast the typing event
-    broadcast(new UserTyping($data))->toOthers();
+    UserTyping::dispatch($data);
      return response()->json(['status' => 'Typing status updated']);
 }
 
