@@ -804,8 +804,9 @@ public function updateTypingStatus($request)
         "isTyping" => $request->is_typing,
         "userId" => $request->id,
     ];
-    // // Broadcast the typing event
     UserTyping::dispatch($data);
+    // // Broadcast the typing event
+    // broadcast( new UserTyping($data) )->toOthers();
      return response()->json(['status' => 'Typing status updated']);
 }
 
