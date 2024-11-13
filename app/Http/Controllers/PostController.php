@@ -142,8 +142,8 @@ class PostController extends Controller
 
 
     public function send_message(SendMessageRequest $request){
-        $data = $this->userdata(auth()->user()->id);
-        if(Gate::allows("check-admin", $data)){
+        // $data = $this->userdata(auth()->user()->id);
+        if(Gate::allows("check-admin", auth()->user())){
           return $this->postmethod->send_message($request);
         }else{
             return response()->json(["error"=>"you don't have access to this api"],200);

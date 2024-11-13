@@ -34,6 +34,7 @@ use App\Models\Secondary_insurance;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Models\Chat;
 use Illuminate\Support\Facades\Hash;
 use ImageKit\ImageKit;
 use GuzzleHttp\Client;
@@ -790,8 +791,28 @@ public function admin_profile_create($request){
 
 public function send_message($request){
 
-    SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message);
-    return response()->json(["success"=>"successful"],200);
+    $randnum = rand(00000, 99999);
+    $chat = Chat::where(['sender_id'=>$request->sender_id, "receiver_id"=>$request->receiver_id])->first();
+    if($chat){
+       $chat_last = Chat::create([
+            "sender_id"=>$request->sender_id,
+            "receiver_id"=>$request->receiver_id,
+            "message"=>$request->message,
+            "chat_id"=>$chat->chat_id
+        ]);
+     SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message, $chat_last);
+    return response()->json(["success"=>"successful", 'data'=>$chat_last],200);
+    }else{
+        $chat_last =  Chat::create([
+            "sender_id"=>$request->sender_id,
+            "receiver_id"=>$request->receiver_id,
+            "message"=>$request->message,
+            "chat_id"=>$randnum
+        ]);
+
+        SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message, $chat_last);
+        return response()->json(["success"=>"successful", 'data'=>$chat_last],200);
+    }
 }
 
 

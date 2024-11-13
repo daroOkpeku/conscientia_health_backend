@@ -21,28 +21,29 @@ class SendMessageEvent implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct($sender_id, $receiver_id, $message)
+    public function __construct($sender_id, $receiver_id, $message, $chat_last)
     {
         $this->sender_id = $sender_id;
         $this->receiver_id = $receiver_id;
         $this->message = $message;
-        $randnum = rand(00000, 99999);
-        $chat = Chat::where(['sender_id'=>$sender_id, "receiver_id"=>$receiver_id])->first();
-        if($chat){
-           $this->chat_last = Chat::create([
-                "sender_id"=>$sender_id,
-                "receiver_id"=>$receiver_id,
-                "message"=>$message,
-                "chat_id"=>$chat->chat_id
-            ]);
-        }else{
-            $this->chat_last =  Chat::create([
-                "sender_id"=>$sender_id,
-                "receiver_id"=>$receiver_id,
-                "message"=>$message,
-                "chat_id"=>$randnum
-            ]);
-        }
+        $this->chat_last = $chat_last;
+        // $randnum = rand(00000, 99999);
+        // $chat = Chat::where(['sender_id'=>$sender_id, "receiver_id"=>$receiver_id])->first();
+        // if($chat){
+        //    $this->chat_last = Chat::create([
+        //         "sender_id"=>$sender_id,
+        //         "receiver_id"=>$receiver_id,
+        //         "message"=>$message,
+        //         "chat_id"=>$chat->chat_id
+        //     ]);
+        // }else{
+        //     $this->chat_last =  Chat::create([
+        //         "sender_id"=>$sender_id,
+        //         "receiver_id"=>$receiver_id,
+        //         "message"=>$message,
+        //         "chat_id"=>$randnum
+        //     ]);
+        // }
     }
 
 
@@ -56,7 +57,7 @@ class SendMessageEvent implements ShouldBroadcast
     {
 
         return [
-            new PrivateChannel('chat.' . $this->sender_id),
+            // new PrivateChannel('chat.' . $this->sender_id),
              new PrivateChannel('chat.' . $this->receiver_id),
         ];
 
