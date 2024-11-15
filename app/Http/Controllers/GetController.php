@@ -1218,7 +1218,7 @@ class GetController extends Controller
 
 
     public function recentuploaddoc(Request $request){
-        $person_document = Person_document::where([
+        $person_document = Person_document::query()->where([
             'name' => $request->get("name"),
             'user_id' => $request->get("user_id")
         ])->orderBy('created_at', 'desc')->first();
