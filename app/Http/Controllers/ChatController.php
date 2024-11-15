@@ -15,7 +15,7 @@ class ChatController extends Controller
 
     public function __construct()
     {
-        $this->http = Http::baseUrl("http://ip-api.com");
+        $this->http = Http::baseUrl("https://ipinfo.io");
     }
 
 
@@ -40,7 +40,8 @@ class ChatController extends Controller
 
         public function geoip($ip)
         {
-            $response = $this->http->get("/json/{$ip}");
+            // $response = $this->http->get("/{$ip}/geo");
+            $response = Http::get("https://ipinfo.io/{$ip}/geo");
 
             if ($response->successful()) {
                 return response()->json(['success' => $response->json()]);

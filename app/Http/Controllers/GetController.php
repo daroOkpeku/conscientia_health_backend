@@ -281,12 +281,26 @@ class GetController extends Controller
     public function state_age_check(Request $request)
     {
         // $state = 'NJ';
-        $doctors = Doctors::whereNotNull('job_title')
-            ->where(['is_account_suspended' => 0, 'is_new_patient' => 1])
-            ->where('age_start', '<=', $request->get('age'))
-            ->where('age_end', '>=', $request->get('age'))
-            ->whereJsonContains('states', $request->get('state'))
-            ->get();
+       if( $request->get('country') == 'US'){
+        $doctors = Doctors::query()->whereNotNull('job_title')
+        ->where(['is_account_suspended' => 0, 'is_new_patient' => 1])
+        ->where('age_start', '<=', $request->get('age'))
+        ->where('age_end', '>=', $request->get('age'))
+        ->whereJsonContains('states', $request->get('state'))
+        ->get();
+
+    if ($doctors) {
+        return response()->json(["success" => $doctors], 200);
+    } else {
+        return response()->json(['error' => "We don't have any providers in the state you selected. Please call us at +877-803-5342 or email us at info@conscientiahealth.com."], 200);
+    }
+       }else{
+        $doctors = Doctors::query()->where('country', '!=', 'US')->whereNotNull('job_title')
+        ->where(['is_account_suspended' => 0, 'is_new_patient' => 1])
+        ->where('age_start', '<=', $request->get('age'))
+        ->where('age_end', '>=', $request->get('age'))
+        ->whereJsonContains('states', $request->get('state'))
+        ->get();
 
         if ($doctors) {
             // $cacheKey = 'doctor_' . $request->get('age') . '_' . $request->get('state');
@@ -297,6 +311,8 @@ class GetController extends Controller
         } else {
             return response()->json(['error' => "We don't have any providers in the state you selected. Please call us at +877-803-5342 or email us at info@conscientiahealth.com."], 200);
         }
+       }
+
     }
 
 
