@@ -1689,10 +1689,8 @@ class GetController extends Controller
             $query->where('user_type', 'user');
          }else if($request->get("user_type") == "not patient"){
            $query->where('user_type', '!=', 'user');
-         }else{
-
          }
-     })->orderBy('created_at', 'desc')->limit(10)->paginate(8);
+     })->orderBy('created_at', 'desc')->paginate(8);
      return  UserResouresShow::collection($user)->additional(['success'=>true]);
     //  return response()->json(["success"=>$userdata],200);
     }else{
@@ -1751,6 +1749,16 @@ public function testdrive(){
     return response()->json([auth()->user()]);
 }
 
+
+public function recentuser(Request $request){
+    if(Gate::allows("check-admin", auth()->user())){
+    $user = User::where('user_type', 'user')->orderBy('created_at', 'desc')->paginate(8);
+    return  UserResouresShow::collection($user)->additional(['success'=>true]);
+
+}else{
+    return response()->json(["error"=>"you don't have access to this api"],200);
+   }
+}
 
 
 

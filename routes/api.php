@@ -138,6 +138,7 @@ Route::middleware('auth:sanctum')->group(function () {
         //Route::get("/get_customer_list", "get_customer_list");
         Route::get("/get_message", "get_message");
         Route::get("testdrive", "testdrive");
+        Route::get("/recentuser", "recentuser");
     });
     // Route::get("userlist", [ChatController::class, "userlist"]);
 
