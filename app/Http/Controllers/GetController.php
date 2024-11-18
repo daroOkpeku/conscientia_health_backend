@@ -1751,6 +1751,33 @@ if ($chat->isEmpty()) {
 return response()->json(['success' =>$chat], 200);
 }
 
+public function unread_message(){
+// Fetch unread chats for the authenticated user
+$unread_chats = Chat::where([
+    'receiver_id' => auth()->user()->id,
+    'is_seen' => 0
+])->get();
+
+$arr = [];
+$num = 0;
+
+foreach ($unread_chats as $unread_chat) {
+    $num++; // Increment the counter for each unread chat
+    $arr[] = [
+        'id' => $unread_chat->id,
+        'sender_id' => $unread_chat->sender_id,
+        'receiver_id' => $unread_chat->receiver_id,
+        'count' => $num,
+        'is_seen' => $unread_chat->is_seen
+    ];
+}
+
+return response()->json(["success" => $arr]);
+
+
+
+}
+
 
 public function doctorsingle(Request $request)
 {

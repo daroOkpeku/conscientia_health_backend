@@ -18,15 +18,17 @@ class SendMessageEvent implements ShouldBroadcast
      private $receiver_id;
      private $message;
      public $chat_last;
+     public $num_is_seen;
     /**
      * Create a new event instance.
      */
-    public function __construct($sender_id, $receiver_id, $message, $chat_last)
+    public function __construct($sender_id, $receiver_id, $message, $chat_last, $is_seen)
     {
         $this->sender_id = $sender_id;
         $this->receiver_id = $receiver_id;
         $this->message = $message;
         $this->chat_last = $chat_last;
+        $this->num_is_seen = $is_seen;
         // $randnum = rand(00000, 99999);
         // $chat = Chat::where(['sender_id'=>$sender_id, "receiver_id"=>$receiver_id])->first();
         // if($chat){

@@ -798,19 +798,24 @@ public function send_message($request){
             "sender_id"=>$request->sender_id,
             "receiver_id"=>$request->receiver_id,
             "message"=>$request->message,
-            "chat_id"=>$chat->chat_id
+            "chat_id"=>$chat->chat_id,
+            "is_seen"=>0
         ]);
-     SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message, $chat_last);
+        $chat_num = Chat::where(['sender_id'=>$request->sender_id, "receiver_id"=>$request->receiver_id, 'is_seen'=>0])->count();
+
+     SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message, $chat_last,  $chat_num);
     return response()->json(["success"=>"successful", 'data'=>$chat_last],200);
     }else{
         $chat_last =  Chat::create([
             "sender_id"=>$request->sender_id,
             "receiver_id"=>$request->receiver_id,
             "message"=>$request->message,
-            "chat_id"=>$randnum
+            "chat_id"=>$randnum,
+            "is_seen"=>0
         ]);
+        $chat_num = Chat::where(['sender_id'=>$request->sender_id, "receiver_id"=>$request->receiver_id, 'is_seen'=>0])->count();
 
-        SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message, $chat_last);
+        SendMessageEvent::dispatch($request->sender_id, $request->receiver_id, $request->message, $chat_last, $chat_num);
         return response()->json(["success"=>"successful", 'data'=>$chat_last],200);
     }
 }

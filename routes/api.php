@@ -118,6 +118,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post("/admin_send_message", "send_message");
         Route::post("/user_send_message", "user_send_message");
         Route::post("/updateTypingStatus", "updateTypingStatus");
+        Route::post("/update_message", "update_message");
     });
 
     Route::controller(GetController::class)->group(function(){
@@ -139,6 +140,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("/get_message", "get_message");
         Route::get("testdrive", "testdrive");
         Route::get("/recentuser", "recentuser");
+        Route::get("/unread_message", "unread_message");
     });
     // Route::get("userlist", [ChatController::class, "userlist"]);
 

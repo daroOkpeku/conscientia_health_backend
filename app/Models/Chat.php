@@ -14,5 +14,6 @@ class Chat extends Model
         "receiver_id",
         "message",
         "chat_id",
+        "is_seen",
     ];
 }

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('receiver_id');
             $table->longText("message");
             $table->string("chat_id")->nullable();
+            $table->boolean("is_seen")->default(false);
             $table->timestamps();
         });
     }
