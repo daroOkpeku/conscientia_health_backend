@@ -141,6 +141,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get("testdrive", "testdrive");
         Route::get("/recentuser", "recentuser");
         Route::get("/unread_message", "unread_message");
+        Route::get("/uploadauth", "uploadauth");
     });
     // Route::get("userlist", [ChatController::class, "userlist"]);
 

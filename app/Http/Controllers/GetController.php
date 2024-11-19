@@ -1804,6 +1804,16 @@ public function recentuser(Request $request){
 }
 
 
+  public function uploadauth(){
+    $imageKit = new ImageKit(
+        "public_ubzgMmE6xfs3M3PhH7b0RdPCNVs=",
+        "private_i8k1ateHiH63X3zO4lxSNn6bLWk=",
+        "https://ik.imagekit.io/mhtpe5cvo"
+      );
+      $authenticationParameters = $imageKit->getAuthenticationParameters();
+      return  response()->json(['success'=>$authenticationParameters]);
+   }
+
 
 
 
