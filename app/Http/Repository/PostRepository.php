@@ -851,4 +851,35 @@ foreach ($array as $value) {
 echo $answer;
 }
 
+public function update_message($request){
+    Chat::where([ "sender_id"=>$request->sender_id,
+    "receiver_id"=>auth()->user()->id])->update([
+    "is_seen"=>1
+    ]);
+
+
+    $unread_chats = Chat::where([
+        'receiver_id' => auth()->user()->id,
+        'is_seen' => 0
+    ])->get();
+
+    $arr = [];
+    $num = 0;
+
+    foreach ($unread_chats as $unread_chat) {
+        $num++; // Increment the counter for each unread chat
+        $arr[] = [
+            'id' => $unread_chat->id,
+            'sender_id' => $unread_chat->sender_id,
+            'receiver_id' => $unread_chat->receiver_id,
+            'count' => $num,
+            'is_seen' => $unread_chat->is_seen
+        ];
+    }
+
+    return response()->json(["success"=>$unread_chats]);
+
+
+}
+
 }

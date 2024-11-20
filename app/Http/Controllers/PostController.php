@@ -15,6 +15,7 @@ use App\Http\Requests\PrimaryRequest;
 use App\Http\Requests\ProfileCreateRequest;
 use App\Http\Requests\Responsible_Party_Create_request;
 use App\Http\Requests\SendMessageRequest;
+use App\Http\Requests\UpdateMessageRequest;
 use App\Http\Requests\UploadRequest;
 use App\Models\Chat;
 use App\Models\Emergency_contact;
@@ -165,33 +166,9 @@ class PostController extends Controller
         return $this->postmethod->updateTypingStatus($request);
     }
 
-    public function update_message(Request $request){
-        Chat::where([ "sender_id"=>$request->sender_id,
-        "receiver_id"=>auth()->user()->id])->update([
-        "is_seen"=>1
-        ]);
+    public function update_message(UpdateMessageRequest $request){
 
-
-        $unread_chats = Chat::where([
-            'receiver_id' => auth()->user()->id,
-            'is_seen' => 0
-        ])->get();
-
-        $arr = [];
-        $num = 0;
-
-        foreach ($unread_chats as $unread_chat) {
-            $num++; // Increment the counter for each unread chat
-            $arr[] = [
-                'id' => $unread_chat->id,
-                'sender_id' => $unread_chat->sender_id,
-                'receiver_id' => $unread_chat->receiver_id,
-                'count' => $num,
-                'is_seen' => $unread_chat->is_seen
-            ];
-        }
-
-        return response()->json(["success"=>$unread_chats]);
+        return $this->postmethod->update_message($request);
     }
 
 }
